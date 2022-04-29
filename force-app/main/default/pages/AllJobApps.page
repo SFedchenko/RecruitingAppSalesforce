@@ -1,21 +1,5 @@
 <apex:page standardController="Job_Application__c" recordSetVar="jobApplications">
-    <apex:form >
-        
-        <style>
-			.tbl	{
-    				border: none;
-    				width: 100%;
-    				margin: 0;
-    				padding: 0;
-					}
-			.tbl td {
-    				width: 50%;
-    				border: none;
-    				margin: 0;
-    				padding: 0;
-					}
-		</style>
-        
+    <apex:form >    
     	<apex:pageBlock title="All Job Applications" id="allJobApplications">
         	<apex:pageBlockTable value="{! jobApplications }" var="jobApp">
                 <apex:column headerValue="Job Application Number">
