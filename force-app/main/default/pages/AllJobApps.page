@@ -1,10 +1,34 @@
 <apex:page standardController="Job_Application__c" recordSetVar="jobApplications">
     <apex:form >
+        
+        <style>
+			.tbl	{
+    				border: none;
+    				width: 100%;
+    				margin: 0;
+    				padding: 0;
+					}
+			.tbl td {
+    				width: 50%;
+    				border: none;
+    				margin: 0;
+    				padding: 0;
+					}
+		</style>
+        
     	<apex:pageBlock title="All Job Applications" id="allJobApplications">
         	<apex:pageBlockTable value="{! jobApplications }" var="jobApp">
-            	<apex:column value="{! jobApp.Name }"/>
-            	<apex:column value="{! jobApp.Position__c }"/>
-            	<apex:column value="{! jobApp.Candidate__c }"/>
+                <apex:column headerValue="Job Application Number">
+              		<apex:commandLink value="{! jobApp.Name }" action="/{! jobApp.Id }"/>
+              	</apex:column>
+                <apex:column headerValue="Position name" value="{! jobApp.Position__c }"/>       
+            	<apex:column headerValue="Position status" value="{! jobApp.Position__r.Status__c }"/>
+                <apex:column headerValue="Position's total reviews amount" value="{! jobApp.Position__r.Total_reviews_amount__c }"/>
+                <apex:column headerValue="Position's record owner" value="{! jobApp.Position__r.OwnerId }"/>
+            	<apex:column headerValue="Candidate name" value="{! jobApp.Candidate__c }"/>
+                <apex:column headerValue="Candidate's current reviews amount" value="{! jobApp.Reviews_amount__c }"/>
+                <apex:column headerValue="Candidate's mean review grade" value="{! jobApp.Mean_review_grade__c }"/>
+                <apex:column headerValue="Candidate's record owner" value="{! jobApp.Candidate__r.OwnerId }"/>
         	</apex:pageBlockTable>
         
 <!-- Pagination -->

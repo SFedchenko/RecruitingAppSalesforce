@@ -4,5 +4,9 @@
         <members>AllJobApps</members>
         <name>ApexPage</name>
     </types>
+    <types>
+        <members>All_Job_Applications</members>
+        <name>CustomTab</name>
+    </types>
     <version>54.0</version>
 </Package>
