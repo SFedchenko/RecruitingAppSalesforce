@@ -1,0 +1,35 @@
+<apex:page controller="positionListController">
+    <apex:form >    
+    	<apex:pageBlock title="Positions" id="positionsPageBlock">
+            <apex:pageMessages />
+            
+        	Filter by Status:
+            <apex:selectList value="{!selectedFilterPicklistOption}" size="1">
+                <apex:actionSupport event="onchange" action="{!ApplyFilter}" rerender="positionsPageBlock"/>
+                <apex:selectOptions value="{!FilterPicklistOptions}"/>
+            </apex:selectList>
+                        
+        	<apex:pageBlockTable value="{! selectedPositionsList }" var="pos" id="positionsTable">
+                <apex:column headerValue="Position title">
+                    <apex:commandLink value="{! pos.Name }" action="/{! pos.Id }"/>
+                </apex:column>
+                <apex:column headerValue="Status">
+                    <apex:inputField value="{! pos.Status__c }"/>
+              	</apex:column>
+            	<apex:column headerValue="Start date" value="{! pos.Start_Date__c }"/>
+                <apex:column headerValue="End date" value="{! pos.End_Date__c }"/>
+                <apex:column headerValue="Min salary" value="{! pos.Min_Salary__c }"/>
+                <apex:column headerValue="Max salary" value="{! pos.Max_Salary__c }"/>
+        	</apex:pageBlockTable>
+            
+            <table style="width: 100%">
+                <tr>
+            		<td align="center">
+        				<apex:commandButton action="{! save }" value="Save" />
+            		</td>
+                </tr>
+            </table>
+            
+		</apex:pageBlock>
+    </apex:form>
+</apex:page>
