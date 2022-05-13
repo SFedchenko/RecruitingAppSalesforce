@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
-        <members>AllPositions</members>
-        <name>ApexPage</name>
+        <members>All_Positions</members>
+        <name>CustomTab</name>
     </types>
     <types>
-        <members>positionListController</members>
+        <members>PositionListController</members>
         <name>ApexClass</name>
     </types>
     <version>54.0</version>

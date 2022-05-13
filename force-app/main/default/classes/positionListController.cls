@@ -1,8 +1,10 @@
-public with sharing class positionListController {
+public with sharing class PositionListController {
+    public string selectedFilterPicklistOption {get; set;}
+    public list<Position__c> selectedPositionsList {get; set;}
     
-    public positionListController() {
+    public PositionListController() {
         selectedFilterPicklistOption = 'Open';
-        ApplyFilter();
+        applyFilter();
     }
     
 	public List<SelectOption> getFilterPicklistOptions() {
@@ -18,17 +20,12 @@ public with sharing class positionListController {
     	return optionsToReturn;
 	}
     
-    public string selectedFilterPicklistOption {get; set;}
-    public list<Position__c> selectedPositionsList {get; set;}
-    public PageReference ApplyFilter() {
+    public PageReference applyFilter() {
+        String q = 'SELECT Id, Name, Status__c, Start_Date__c, End_Date__c, Min_Salary__c, Max_Salary__c FROM Position__c';
         if (selectedFilterPicklistOption != 'All') {
-            selectedPositionsList = new list<Position__c>([SELECT Id, Name, Status__c, Start_Date__c, End_Date__c, Min_Salary__c, Max_Salary__c
-                                                           FROM Position__c
-                                                           WHERE Status__c =: selectedFilterPicklistOption]);
-        } else {
-            selectedPositionsList = new list<Position__c>([SELECT Id, Name, Status__c, Start_Date__c, End_Date__c, Min_Salary__c, Max_Salary__c
-                                                           FROM Position__c]);
-        }
+            q += ' WHERE Status__c =: selectedFilterPicklistOption';
+     	}
+        selectedPositionsList = Database.query(q);
         if(selectedPositionsList.size() == 0) {
             ApexPages.AddMessage(new ApexPages.Message(ApexPages.Severity.Info, 'There are no positions with status ' + '"' + selectedFilterPicklistOption + '"'));
 		}
