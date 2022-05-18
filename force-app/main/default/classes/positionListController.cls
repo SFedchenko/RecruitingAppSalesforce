@@ -1,13 +1,13 @@
 public with sharing class PositionListController {
-    public string selectedFilterPicklistOption {get; set;}
-    public list<Position__c> selectedPositionsList {get; set;}
+    public String selectedFilterPicklistOption {get; set;}
+    public List<Position__c> selectedPositionsList {get; set;}
     
     public PositionListController() {
         selectedFilterPicklistOption = 'Open';
         applyFilter();
     }
     
-	public List<SelectOption> getFilterPicklistOptions() {
+	public static List<SelectOption> getFilterPicklistOptions() {
     	Schema.DescribeFieldResult describeResult = Position__c.Status__c.getDescribe();
     	List<Schema.PicklistEntry> entries = describeResult.getPicklistValues();
     	List<SelectOption> optionsToReturn = new List<SelectOption>();
