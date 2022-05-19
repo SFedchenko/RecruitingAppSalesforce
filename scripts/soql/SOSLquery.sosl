@@ -1,0 +1,5 @@
+FIND {develop} IN ALL FIELDS
+RETURNING
+Position__c (Id, Name WHERE CreatedDate < LAST_N_DAYS:7),
+Candidate__c (Id, Name WHERE CreatedDate < LAST_N_DAYS:7),
+Review__c (Id, Name WHERE CreatedDate < LAST_N_DAYS:7)
