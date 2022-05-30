@@ -1,0 +1,25 @@
+<template>
+    <template if:true={loadingPicklistValuesErrors}>
+        <p>{loadingPicklistValuesErrors}</p>
+    </template>
+    <template if:true={loadingSelectedPositionsErrors}>
+        <p>{loadingSelectedPositionsErrors}</p>
+    </template>
+    <lightning-card>
+        <div style="width:200px; padding:0.5rem;">
+            <lightning-combobox name="status"
+                                label="Filter by Status:"
+                                value={selectedStatus}
+                                options={filterPicklistValues}
+                                onchange={handleChange}
+                                >
+            </lightning-combobox>
+        </div>
+    </lightning-card>
+    <lightning-datatable
+        data={selectedPositions}
+        columns={columns}
+        key-field="Id"
+    >
+    </lightning-datatable>
+</template>
