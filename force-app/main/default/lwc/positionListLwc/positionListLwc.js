@@ -1,29 +1,18 @@
 import { LightningElement, wire, api } from 'lwc';
 import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { NavigationMixin } from 'lightning/navigation';
+import { updateRecord } from 'lightning/uiRecordApi';
 import { reduceErrors } from 'c/ldsUtils';
 import POSITION__C_OBJECT from '@salesforce/schema/Position__c';
-import NAME_FIELD from '@salesforce/schema/Position__c.Name';
 import STATUS__C_FIELD from '@salesforce/schema/Position__c.Status__c';
-import START_DATE__C_FIELD from '@salesforce/schema/Position__c.Start_Date__c';
-import END_DATE__C_FIELD from '@salesforce/schema/Position__c.End_Date__c';
-import MIN_SALARY__C_FIELD from '@salesforce/schema/Position__c.Min_Salary__c';
-import MAX_SALARY__C_FIELD from '@salesforce/schema/Position__c.Max_Salary__c';
 import getPositions from '@salesforce/apex/PositionListLwcController.getPositions';
 
-const COLUMNS = [
-    { label: 'Position title', fieldName: NAME_FIELD.fieldApiName, type: 'text' },
-    { label: 'Status', fieldName: STATUS__C_FIELD.fieldApiName, type: 'statusPicklist', },
-    { label: 'Start date', fieldName: START_DATE__C_FIELD.fieldApiName, type: 'date-local' },
-    { label: 'End date', fieldName: END_DATE__C_FIELD.fieldApiName, type: 'date-local' },
-    { label: 'Min salary', fieldName: MIN_SALARY__C_FIELD.fieldApiName, type: 'currency' },
-    { label: 'Max salary', fieldName: MAX_SALARY__C_FIELD.fieldApiName, type: 'currency' }
-];
-
-export default class PositionListLwc extends LightningElement {
-    columns = COLUMNS;
-    @api selectedStatus = 'Open';
-    @api picklistValues = [];
+export default class PositionListLwc extends NavigationMixin(LightningElement) {
+    selectedStatus = 'Open';
+    picklistValues = [];
     filterPicklistValues = [];
+    selectedPositions = [];
     @wire( getObjectInfo, { objectApiName:  POSITION__C_OBJECT })
     objectInfo;
     @wire( getPicklistValues, { recordTypeId: '$objectInfo.data.defaultRecordTypeId', fieldApiName: STATUS__C_FIELD } )
@@ -44,16 +33,64 @@ export default class PositionListLwc extends LightningElement {
     
     handleChange(event) {
         this.selectedStatus = event.detail.value;
-        console.log(this.selectedStatus);
         getPositions ({
             selectedStatus: this.selectedStatus
         })
             .then (data => {
+                console.log(data.length);
                 this.selectedPositions = data;
-                console.log(this.selectedPositions);
             })
             .catch(error => {
 				this.loadingSelectedPositionsErrors = reduceErrors(error);
 			});
+    }
+
+    /*
+    updatePositions(){
+        const fields = this.selectedPositions[0];
+        const recordsInput = {fields};
+        console.log(recordsInput);
+        console.log(typeof STATUS__C_FIELD.fieldApiName);
+        updateRecord(recordsInput)
+            .then(() => {
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Success',
+                        message: 'Case Updated',
+                        variant: 'success'
+                    })
+                );
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
+    */
+
+    connectedCallback() {
+		getPositions ({
+            selectedStatus: this.selectedStatus
+        })
+            .then (data => {
+                this.selectedPositions = data;
+            })
+            .catch(error => {
+				this.loadingSelectedPositionsErrors = reduceErrors(error);
+			});
+	}
+
+    navigateToPositionRecord(event){
+        event.preventDefault();
+        let linkId = event.target.getAttribute('id');
+        let navigatedRecordId = linkId.substring(0, linkId.indexOf('-'));
+        this[NavigationMixin.GenerateUrl]({
+            type: 'standard__recordPage',
+            attributes: {
+                recordId: navigatedRecordId,
+                actionName: 'view'
+            }
+        }).then(url => {
+            window.open(url);
+        })
     }
 }
