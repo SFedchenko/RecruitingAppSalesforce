@@ -1,22 +1,14 @@
 <template>
     <lightning-card>
 
-        <template if:true={loadingPicklistValuesErrors}>
-            <p>{loadingPicklistValuesErrors}</p>
-        </template>
-
-        <template if:true={loadingSelectedPositionsErrors}>
-            <p>{loadingSelectedPositionsErrors}</p>
-        </template>
-
         <lightning-layout vertical-align="end">
             <lightning-layout-item size="4">
                 <div class="slds-p-around_small slds-float_left">
                     <lightning-combobox name="status"
                                         label="Filter by status:"
-                                        value={selectedStatus}
+                                        value={selectedFilterOption}
                                         options={filterPicklistValues}
-                                        onchange={handleChange}
+                                        onchange={handleFilterChange}
                                         style="width: 200px"
                     >
                     </lightning-combobox>
@@ -25,69 +17,72 @@
 
             <lightning-layout-item size="4">
                 <div class="slds-p-bottom_small">
-                    <button class="slds-button slds-button_brand slds-align_absolute-center" onclick={updatePositions}>Save</button>
+                    <button class="slds-button slds-button_brand slds-align_absolute-center" onclick={updateRecords} disabled={buttonAccessibility}>Save</button>
                 </div>
             </lightning-layout-item>
         </lightning-layout>
 
-        <table class="slds-table slds-table_cell-buffer slds-table_bordered" aria-labelledby="element-with-table-label other-element-with-table-label">
-            <thead>
-                <tr class="slds-line-height_reset">
-                    <th class="slds-text-align_center" style="width: 20%" scope="col">
-                        <div class="slds-truncate" title="Position title">Position title</div>
-                    </th>
-                    <th class="slds-text-align_center" style="width: 20%" scope="col">
-                        <div class="slds-truncate" title="Status">Status</div>
-                    </th>
-                    <th class="slds-text-align_center" style="width: 15%" scope="col">
-                        <div class="slds-truncate" title="Start date">Start date</div>
-                    </th>
-                    <th class="slds-text-align_center" style="width: 15%" scope="col">
-                        <div class="slds-truncate" title="End date">End date</div>
-                    </th>
-                    <th class="slds-text-align_center" style="width: 15%" scope="col">
-                        <div class="slds-truncate" title="Min salary">Min salary</div>
-                    </th>
-                    <th class="slds-text-align_center" style="width: 15%" scope="col">
-                        <div class="slds-truncate" title="Max salary">Max salary</div>
-                    </th>
-                </tr>
-            </thead>
+        <template if:true={showTable}>
+            <table class="slds-table slds-table_cell-buffer slds-table_bordered" aria-labelledby="element-with-table-label other-element-with-table-label">
+                <thead>
+                    <tr class="slds-line-height_reset">
+                        <th class="slds-text-align_center" style="width: 20%" scope="col">
+                            <div class="slds-truncate" title="Position title">Position title</div>
+                        </th>
+                        <th class="slds-text-align_center" style="width: 20%" scope="col">
+                            <div class="slds-truncate" title="Status">Status</div>
+                        </th>
+                        <th class="slds-text-align_center" style="width: 15%" scope="col">
+                            <div class="slds-truncate" title="Start date">Start date</div>
+                        </th>
+                        <th class="slds-text-align_center" style="width: 15%" scope="col">
+                            <div class="slds-truncate" title="End date">End date</div>
+                        </th>
+                        <th class="slds-text-align_center" style="width: 15%" scope="col">
+                            <div class="slds-truncate" title="Min salary">Min salary</div>
+                        </th>
+                        <th class="slds-text-align_center" style="width: 15%" scope="col">
+                            <div class="slds-truncate" title="Max salary">Max salary</div>
+                        </th>
+                    </tr>
+                </thead>
 
-            <tbody>
-                <template if:true={selectedPositions}>
-                    <template for:each={selectedPositions} for:item="position">
-                        <tr key={position.Id} class="slds-hint-parent">
-                            <td data-label="Position name" scope="row">
-                                <div class="slds-truncate" title={position.Name}>
-                                    <a id={position.Id} onclick={navigateToPositionRecord} tabindex="-1">{position.Name}</a>
-                                </div>
-                            </td>
-                            <td data-label="Position status">
-                                <div title="">
-                                    <lightning-combobox value={position.Status__c}
-                                                        options={picklistValues}
-                                    >
-                                    </lightning-combobox>
-                                </div>
-                            </td>
-                            <td class="slds-text-align_center" data-label="Position start date">
-                                <div class="slds-truncate" title="">{position.Start_Date__c}</div>
-                            </td>
-                            <td class="slds-text-align_center" data-label="Position end date">
-                                <div class="slds-truncate" title="">{position.End_Date__c}</div>
-                            </td>
-                            <td class="slds-text-align_center" data-label="Position min salary">
-                                <div class="slds-truncate" title="">{position.Min_Salary__c}</div>
-                            </td>
-                            <td class="slds-text-align_center" data-label="Position max salary">
-                                <div class="slds-truncate" title="">{position.Max_Salary__c}</div>
-                            </td>
-                        </tr>
+                <tbody>
+                    <template if:true={selectedPositions}>
+                        <template for:each={selectedPositions} for:item="position">
+                            <tr key={position.Id} data-position-id={position.Id} class="slds-hint-parent">
+                                <td data-label="Position name" scope="row">
+                                    <div class="slds-truncate" title={position.Name}>
+                                        <a onclick={navigateToPositionRecord} tabindex="-1">{position.Name}</a>
+                                    </div>
+                                </td>
+                                <td data-label="Position status">
+                                    <div title="">
+                                        <lightning-combobox value={position.Status__c}
+                                                            options={picklistValues}
+                                                            onchange={handleStatusChange}
+                                        >
+                                        </lightning-combobox>
+                                    </div>
+                                </td>
+                                <td class="slds-text-align_center" data-label="Position start date">
+                                    <div class="slds-truncate" title="">{position.Start_Date__c}</div>
+                                </td>
+                                <td class="slds-text-align_center" data-label="Position end date">
+                                    <div class="slds-truncate" title="">{position.End_Date__c}</div>
+                                </td>
+                                <td class="slds-text-align_center" data-label="Position min salary">
+                                    <div class="slds-truncate" title="">{position.Min_Salary__c}</div>
+                                </td>
+                                <td class="slds-text-align_center" data-label="Position max salary">
+                                    <div class="slds-truncate" title="">{position.Max_Salary__c}</div>
+                                </td>
+                            </tr>
+                        </template>
                     </template>
-                </template>
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </template>
     
     </lightning-card>
 </template>
