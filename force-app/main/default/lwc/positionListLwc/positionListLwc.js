@@ -10,13 +10,14 @@ import updatePositions from '@salesforce/apex/PositionListLwcController.updatePo
 
 export default class PositionListLwc extends NavigationMixin(LightningElement) {
 
-    buttonAccessibility = true; //boolean variable to store "disabled" attribute of "Save" button to be able to enable it when user will change status of record in the page table
+    saveButtonAccessibility = true; //boolean variable to store "disabled" attribute of "Save" button to be able to enable it when user will change status of record in the page table
     selectedFilterOption = 'Open'; //string variable to store status picklist filter selected option with default value in it
     showTable = true; //boolean variable for hiding datatable if there are no records for selected status filter picklist option
     picklistValues = []; //array to store picklist options for Status__c field of Position__c object received from org. Used for Position status table cell
     filterPicklistValues = []; //array to store options for status picklist filter if there is a need to add options to existing at Status__c field options of Position__c object at org
     selectedPositions = []; //array to store position records received from the org and display in the page table
     modifiedPositions = []; //clone of selectedPositions array to store changes of Position status cell in page table
+    paginatedPositions;
 
     //Loading page with default value of status picklist filter
     connectedCallback() {
@@ -116,7 +117,7 @@ export default class PositionListLwc extends NavigationMixin(LightningElement) {
 
     //Function for handling status picklists changes in the page table
     handleStatusChange(event){
-        this.buttonAccessibility = false;
+        this.saveButtonAccessibility = false;
         const selectedStatus = event.detail.value;
         const id = event.target.closest('tr').dataset.positionId;
         for(let i=0; i<this.modifiedPositions.length; i++){
@@ -163,5 +164,9 @@ export default class PositionListLwc extends NavigationMixin(LightningElement) {
                     this.showMessage('There was an error updating records. Please try again', '', 'error');
                 });
         }
+    }
+
+    paginateRecordsHandler(event){
+        this.paginatedPositions = [...event.detail.records];
     }
 }

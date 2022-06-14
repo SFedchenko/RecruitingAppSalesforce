@@ -17,7 +17,7 @@
 
             <lightning-layout-item size="4">
                 <div class="slds-p-bottom_small">
-                    <button class="slds-button slds-button_brand slds-align_absolute-center" onclick={updateRecords} disabled={buttonAccessibility}>Save</button>
+                    <button class="slds-button slds-button_brand slds-align_absolute-center" onclick={updateRecords} disabled={saveButtonAccessibility}>Save</button>
                 </div>
             </lightning-layout-item>
         </lightning-layout>
@@ -48,8 +48,8 @@
                 </thead>
 
                 <tbody>
-                    <template if:true={selectedPositions}>
-                        <template for:each={selectedPositions} for:item="position">
+                    <template if:true={paginatedPositions}>
+                        <template for:each={paginatedPositions} for:item="position">
                             <tr key={position.Id} data-position-id={position.Id} class="slds-hint-parent">
                                 <td data-label="Position name" scope="row">
                                     <div class="slds-truncate" title={position.Name}>
@@ -84,5 +84,8 @@
             </table>
         </template>
     
+        <div slot="footer">
+            <c-pagination records={modifiedPositions} onpaginate={paginateRecordsHandler}></c-pagination>
+        </div>
     </lightning-card>
 </template>
