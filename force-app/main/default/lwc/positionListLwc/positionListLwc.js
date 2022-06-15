@@ -17,22 +17,13 @@ export default class PositionListLwc extends NavigationMixin(LightningElement) {
     filterPicklistValues = []; //array to store options for status picklist filter if there is a need to add options to existing at Status__c field options of Position__c object at org
     selectedPositions = []; //array to store position records received from the org and display in the page table
     modifiedPositions = []; //clone of selectedPositions array to store changes of Position status cell in page table
-    paginatedPositions;
+    @api recordsPerPageParent = 2; //number variable to store amount of records displayed per page
+    paginatedPositions; //array to store records returned from child pagination component
 
     //Loading page with default value of status picklist filter
     connectedCallback() {
 		this.loadPositions(this.selectedFilterOption);
 	}
-
-    //Function for cloning array of objects with primitives (position records)
-    cloneArrayOfObjects(array){
-        let clonedArray = [];
-        for(let i=0; i<array.length; i++){
-            let clonedObjectOfArray = {...array[i]};
-            clonedArray.push(clonedObjectOfArray);
-        }
-        return clonedArray;
-    }
     
     //Function for showing page message
     showMessage(customTitle = '', customMessage = '', customVariant = 'info'){
@@ -69,6 +60,7 @@ export default class PositionListLwc extends NavigationMixin(LightningElement) {
 
     /*
     Function for:
+    - disabling "Save" button;
     - receiving positions records from org;
     - cloning received array;
     - hiding table and showing warning message if there are no positions records for selected status picklist filter option;
@@ -79,8 +71,9 @@ export default class PositionListLwc extends NavigationMixin(LightningElement) {
             selectedFilterOption: statusFilterValue
         })
             .then (data => {
+                this.saveButtonAccessibility = true;
                 this.selectedPositions = data;
-                this.modifiedPositions = this.cloneArrayOfObjects(this.selectedPositions);
+                this.modifiedPositions = JSON.parse(JSON.stringify(this.selectedPositions));
                 if (this.selectedPositions.length === 0){
                     this.showTable = false;
                     this.showMessage(`There are no positions with status "${statusFilterValue}"`, '', 'warning');
@@ -130,7 +123,7 @@ export default class PositionListLwc extends NavigationMixin(LightningElement) {
     /*
     Function for handling onclick event of 'Save' button that is:
     - compositing array of position records that were modified and need to be updated as difference between selectedPositions array and modifiedPositions array;
-    - showing page message if there were no any records changes;
+    - showing page message and disabling "Save" button if there were no any records changes;
     - updating records with updatePositions method from apex controller;
     - showing 'success' message and reloading page with current selectedFilterOption if records were saved successfully;
     - showing 'error' message if there were any errors during records updating.
@@ -147,6 +140,7 @@ export default class PositionListLwc extends NavigationMixin(LightningElement) {
         }
         if(positionsToUpdate.length === 0){
             this.showMessage('Was not modified any status', '', 'warning');
+            this.saveButtonAccessibility = true;
         } else {
             updatePositions ({
                 positions: positionsToUpdate
@@ -166,6 +160,7 @@ export default class PositionListLwc extends NavigationMixin(LightningElement) {
         }
     }
 
+    //Function for working with child pagination component that is getting records to display in page table from event detail
     paginateRecordsHandler(event){
         this.paginatedPositions = [...event.detail.records];
     }
