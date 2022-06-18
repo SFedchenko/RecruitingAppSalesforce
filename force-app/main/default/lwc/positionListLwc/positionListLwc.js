@@ -5,6 +5,7 @@ import { NavigationMixin } from 'lightning/navigation';
 import POSITION__C_OBJECT from '@salesforce/schema/Position__c';
 import STATUS__C_FIELD from '@salesforce/schema/Position__c.Status__c';
 import getPositions from '@salesforce/apex/PositionListLwcController.getPositions';
+import getPositionsAmount from '@salesforce/apex/PositionListLwcController.getPositionsAmount';
 import updatePositions from '@salesforce/apex/PositionListLwcController.updatePositions';
 
 
@@ -17,12 +18,22 @@ export default class PositionListLwc extends NavigationMixin(LightningElement) {
     filterPicklistValues = []; //array to store options for status picklist filter if there is a need to add options to existing at Status__c field options of Position__c object at org
     selectedPositions = []; //array to store position records received from the org and display in the page table
     modifiedPositions = []; //clone of selectedPositions array to store changes of Position status cell in page table
-    @api recordsPerPageParent = 2; //number variable to store amount of records displayed per page
-    paginatedPositions; //array to store records returned from child pagination component
+    @api recordsPerPageParent; //number variable to store amount of records displayed per page
+    @api pagesAmountParent; //number variable to store amount of pages
+    componentOffsetParam; //number variable to store offset parameter of the database query
+    @api pageNumber; //number variable to store starting page number
 
-    //Loading page with default value of status picklist filter
+    //Calculating starting offset parameter from starting page number
+    getStartingOffsetParam(){
+        this.componentOffsetParam = (this.pageNumber - 1) * this.recordsPerPageParent;
+    }
+
+    //Loading 1st page with default value of status picklist filter
     connectedCallback() {
-		this.loadPositions(this.selectedFilterOption);
+        this.pageNumber = 1;
+        this.getStartingOffsetParam();
+        this.loadPositionsAmount(this.selectedFilterOption);
+		this.loadPositions(this.selectedFilterOption, this.recordsPerPageParent, this.componentOffsetParam);
 	}
     
     //Function for showing page message
@@ -64,11 +75,13 @@ export default class PositionListLwc extends NavigationMixin(LightningElement) {
     - receiving positions records from org;
     - cloning received array;
     - hiding table and showing warning message if there are no positions records for selected status picklist filter option;
-    - showing error message if there was error during loading positions records from org.
+    - showing error message if there was an error during loading positions records from org.
     */
-    loadPositions(statusFilterValue){
+    loadPositions(statusFilterValue, recordsPerPage, componentOffsetParam){
         getPositions ({
-            selectedFilterOption: statusFilterValue
+            selectedFilterOption: statusFilterValue,
+            limitParam: recordsPerPage,
+            offsetParam: componentOffsetParam
         })
             .then (data => {
                 this.saveButtonAccessibility = true;
@@ -82,7 +95,26 @@ export default class PositionListLwc extends NavigationMixin(LightningElement) {
                 }
             })
             .catch (error => {
-				this.showMessage('There was a problem loading position records from database', '', 'error');
+				this.showMessage('There was a problem loading positions records from database', '', 'error');
+			});
+        
+    }
+
+    /*
+    Function for:
+    - receiving positions records amount from org;
+    - calculating appropriate amount of pages;
+    - showing error message if there was error during loading positions records amount from org.
+    */
+    loadPositionsAmount(statusFilterValue){
+        getPositionsAmount ({
+            selectedFilterOption: statusFilterValue
+        })
+            .then (data => {
+                this.pagesAmountParent = Math.ceil(data / this.recordsPerPageParent);
+            })
+            .catch (error => {
+				this.showMessage('There was a problem loading positions records amount from database', '', 'error');
 			});
         
     }
@@ -105,7 +137,7 @@ export default class PositionListLwc extends NavigationMixin(LightningElement) {
     //Function for handling status picklist filter change
     handleFilterChange(event) {
         this.selectedFilterOption = event.detail.value;
-        this.loadPositions(this.selectedFilterOption);
+        this.connectedCallback();
     }
 
     //Function for handling status picklists changes in the page table
@@ -125,7 +157,7 @@ export default class PositionListLwc extends NavigationMixin(LightningElement) {
     - compositing array of position records that were modified and need to be updated as difference between selectedPositions array and modifiedPositions array;
     - showing page message and disabling "Save" button if there were no any records changes;
     - updating records with updatePositions method from apex controller;
-    - showing 'success' message and reloading page with current selectedFilterOption if records were saved successfully;
+    - showing 'success' message and loading 1st page with current selectedFilterOption if records were saved successfully;
     - showing 'error' message if there were any errors during records updating.
     */
     updateRecords(){
@@ -160,8 +192,15 @@ export default class PositionListLwc extends NavigationMixin(LightningElement) {
         }
     }
 
-    //Function for working with child pagination component that is getting records to display in page table from event detail
+    /*
+    Function for working with child pagination component that is:
+    - getting current page number from event detail;
+    - calculating aapropriate offset parameter componentOffsetParam;
+    - loading appropriate positions records from database.
+    */
     paginateRecordsHandler(event){
-        this.paginatedPositions = [...event.detail.records];
+        this.pageNumber = event.detail.currentPageNumber;
+        this.getStartingOffsetParam();
+        this.loadPositions(this.selectedFilterOption, this.recordsPerPageParent, this.componentOffsetParam);
     }
 }

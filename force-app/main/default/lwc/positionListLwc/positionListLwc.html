@@ -48,8 +48,8 @@
                 </thead>
 
                 <tbody>
-                    <template if:true={paginatedPositions}>
-                        <template for:each={paginatedPositions} for:item="position">
+                    <template if:true={selectedPositions}>
+                        <template for:each={selectedPositions} for:item="position">
                             <tr key={position.Id} data-position-id={position.Id} class="slds-hint-parent">
                                 <td data-label="Position name" scope="row">
                                     <div class="slds-truncate" title={position.Name}>
@@ -82,10 +82,9 @@
                     </template>
                 </tbody>
             </table>
+            <div slot="footer">
+                <c-pagination pagenumber={pageNumber} pagesamount={pagesAmountParent} onpaginate={paginateRecordsHandler}></c-pagination>
+            </div>
         </template>
-    
-        <div slot="footer">
-            <c-pagination recordsperpage={recordsPerPageParent} records={modifiedPositions} onpaginate={paginateRecordsHandler}></c-pagination>
-        </div>
     </lightning-card>
 </template>
