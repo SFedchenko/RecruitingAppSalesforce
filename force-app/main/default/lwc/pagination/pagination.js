@@ -41,7 +41,7 @@ export default class Pagination extends LightningElement {
         }
     }
 
-    //Getter for "records" variable
+    //Getter for "pagesamount" variable
     get pagesamount() {
         return this.pagesAmount;
     }
