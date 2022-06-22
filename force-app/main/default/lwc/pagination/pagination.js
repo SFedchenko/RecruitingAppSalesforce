@@ -12,7 +12,7 @@ export default class Pagination extends LightningElement {
     - setting approprite accessibility for these numbers buttons.
     */
     @api
-    set pagenumber(data) {
+    set pageNumber(data) {
         if (data){
             this.currentPage = data;
             this.getNumbersButtonsArray();
@@ -21,7 +21,7 @@ export default class Pagination extends LightningElement {
     }
 
     //Getter for "pagenumber" variable
-    get pagenumber() {
+    get pageNumber() {
         return this.currentPage;
     }
 
@@ -33,7 +33,7 @@ export default class Pagination extends LightningElement {
     - setting approprite accessibility for these numbers buttons.
     */
     @api
-    set pagesamount(data) {
+    set pagesAmountParent(data) {
         if (data){
             this.pagesAmount = data;
             this.getNumbersButtonsArray();
@@ -42,7 +42,7 @@ export default class Pagination extends LightningElement {
     }
 
     //Getter for "pagesamount" variable
-    get pagesamount() {
+    get pagesAmountParent() {
         return this.pagesAmount;
     }
 
@@ -57,20 +57,12 @@ export default class Pagination extends LightningElement {
 
     //Function for setting "Previous" button accessibility
     get previousButtonAccessibility() {
-        if(this.currentPage <= 1){
-            return true;
-        } else {
-            return false;
-        }
+        return this.currentPage <= 1;
     }
 
     //Function for setting "Next" button accessibility
     get nextButtonAccessibility() {
-        if(this.currentPage >= this.pagesAmount){
-            return true;
-        } else {
-            return false;
-        }
+        return this.currentPage >= this.pagesAmount;
     }
 
     //Function for setting appropriate accessibility for numbers buttons
@@ -120,7 +112,7 @@ export default class Pagination extends LightningElement {
     - sending appropriate page number to parent component.
     */
     numberButtonHandler(event) {
-        this.currentPage = parseInt(event.target.dataset.buttonId);
+        this.currentPage = parseInt(event.target.label);
         this.sendPageNumberToParent();
     }
 }

@@ -13,13 +13,12 @@
 
         <template for:each={numbersButtonsArray} for:item="numberButton">
             <lightning-layout-item key={numberButton.number} class="slds-p-vertical_small">
-                <button class="slds-button slds-button_brand"
-                        data-button-id={numberButton.number}
-                        onclick={numberButtonHandler}
-                        disabled={numberButton.isDisabled}
+                <lightning-button variant="brand"
+                                  label={numberButton.number}
+                                  onclick={numberButtonHandler}
+                                  disabled={numberButton.isDisabled}
                 >
-                    {numberButton.number}
-                </button>
+                </lightning-button>
             </lightning-layout-item>
         </template>
 

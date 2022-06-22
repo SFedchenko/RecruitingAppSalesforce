@@ -34,6 +34,20 @@ public class PositionListLwcControllerTest {
     }
     
     @isTest
+    static void testGetPositionsWrapper() {
+        List<Position__c> testPositionsWithStatusOpen = TestFactory.generatePositions('Open', 2);
+        
+        Test.startTest();
+        
+        PositionListLwcController.PositionsWrapper methodPositionsWrapper = PositionListLwcController.getPositionsWrapper('Open', 2, 0);
+        
+        Test.stopTest();
+        
+        System.assertEquals (testPositionsWithStatusOpen, methodPositionsWrapper.positionsRecords);
+        System.assertEquals (2, methodPositionsWrapper.positionsAmount);
+    }
+    
+    @isTest
     static void testUpdatePositions() {
         List<Position__c> testPositionsWithStatusOpen = TestFactory.generatePositions('Open', 2);
         List<Position__c> testPositionsWithStatusClosed = TestFactory.generatePositions('Closed', 2);

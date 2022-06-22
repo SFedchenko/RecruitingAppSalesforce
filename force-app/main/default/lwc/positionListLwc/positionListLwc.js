@@ -4,8 +4,7 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { NavigationMixin } from 'lightning/navigation';
 import POSITION__C_OBJECT from '@salesforce/schema/Position__c';
 import STATUS__C_FIELD from '@salesforce/schema/Position__c.Status__c';
-import getPositions from '@salesforce/apex/PositionListLwcController.getPositions';
-import getPositionsAmount from '@salesforce/apex/PositionListLwcController.getPositionsAmount';
+import getPositionsWrapper from '@salesforce/apex/PositionListLwcController.getPositionsWrapper';
 import updatePositions from '@salesforce/apex/PositionListLwcController.updatePositions';
 
 
@@ -22,6 +21,7 @@ export default class PositionListLwc extends NavigationMixin(LightningElement) {
     @api pagesAmountParent; //number variable to store amount of pages
     componentOffsetParam; //number variable to store offset parameter of the database query
     @api pageNumber; //number variable to store starting page number
+    showSpinner; //boolean variable for showing spinner during loading and processing data
 
     //Calculating starting offset parameter from starting page number
     getStartingOffsetParam(){
@@ -32,8 +32,7 @@ export default class PositionListLwc extends NavigationMixin(LightningElement) {
     connectedCallback() {
         this.pageNumber = 1;
         this.getStartingOffsetParam();
-        this.loadPositionsAmount(this.selectedFilterOption);
-		this.loadPositions(this.selectedFilterOption, this.recordsPerPageParent, this.componentOffsetParam);
+        this.loadPositionsWrapper(this.selectedFilterOption, this.recordsPerPageParent, this.componentOffsetParam);
 	}
     
     //Function for showing page message
@@ -72,20 +71,23 @@ export default class PositionListLwc extends NavigationMixin(LightningElement) {
     /*
     Function for:
     - disabling "Save" button;
-    - receiving positions records from org;
-    - cloning received array;
+    - receiving positions records and positions records amount from org;
+    - calculating appropriate amount of pages;
+    - cloning positions records array;
     - hiding table and showing warning message if there are no positions records for selected status picklist filter option;
-    - showing error message if there was an error during loading positions records from org.
+    - showing error message if there was an error during loading data from org.
     */
-    loadPositions(statusFilterValue, recordsPerPage, componentOffsetParam){
-        getPositions ({
-            selectedFilterOption: statusFilterValue,
-            limitParam: recordsPerPage,
-            offsetParam: componentOffsetParam
+    loadPositionsWrapper(statusFilterValue, recordsPerPage, componentOffsetParam){
+        getPositionsWrapper ({
+            selectedFilterOptionWrapper: statusFilterValue,
+            limitParamWrapper: recordsPerPage,
+            offsetParamWrapper: componentOffsetParam
         })
             .then (data => {
+                this.showSpinner = true;
                 this.saveButtonAccessibility = true;
-                this.selectedPositions = data;
+                this.selectedPositions = data.positionsRecords;
+                this.pagesAmountParent = Math.ceil(data.positionsAmount / this.recordsPerPageParent);
                 this.modifiedPositions = JSON.parse(JSON.stringify(this.selectedPositions));
                 if (this.selectedPositions.length === 0){
                     this.showTable = false;
@@ -93,28 +95,10 @@ export default class PositionListLwc extends NavigationMixin(LightningElement) {
                 } else {
                     this.showTable = true;
                 }
+                this.showSpinner = false;
             })
             .catch (error => {
-				this.showMessage('There was a problem loading positions records from database', '', 'error');
-			});
-        
-    }
-
-    /*
-    Function for:
-    - receiving positions records amount from org;
-    - calculating appropriate amount of pages;
-    - showing error message if there was error during loading positions records amount from org.
-    */
-    loadPositionsAmount(statusFilterValue){
-        getPositionsAmount ({
-            selectedFilterOption: statusFilterValue
-        })
-            .then (data => {
-                this.pagesAmountParent = Math.ceil(data / this.recordsPerPageParent);
-            })
-            .catch (error => {
-				this.showMessage('There was a problem loading positions records amount from database', '', 'error');
+				this.showMessage('There was a problem loading data from database', '', 'error');
 			});
         
     }
@@ -195,12 +179,12 @@ export default class PositionListLwc extends NavigationMixin(LightningElement) {
     /*
     Function for working with child pagination component that is:
     - getting current page number from event detail;
-    - calculating aapropriate offset parameter componentOffsetParam;
+    - calculating appropriate offset parameter componentOffsetParam;
     - loading appropriate positions records from database.
     */
     paginateRecordsHandler(event){
         this.pageNumber = event.detail.currentPageNumber;
         this.getStartingOffsetParam();
-        this.loadPositions(this.selectedFilterOption, this.recordsPerPageParent, this.componentOffsetParam);
+        this.loadPositionsWrapper(this.selectedFilterOption, this.recordsPerPageParent, this.componentOffsetParam);
     }
 }
