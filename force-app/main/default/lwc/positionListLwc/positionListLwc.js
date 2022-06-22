@@ -70,11 +70,13 @@ export default class PositionListLwc extends NavigationMixin(LightningElement) {
 
     /*
     Function for:
+    - showing spinner;
     - disabling "Save" button;
     - receiving positions records and positions records amount from org;
     - calculating appropriate amount of pages;
     - cloning positions records array;
     - hiding table and showing warning message if there are no positions records for selected status picklist filter option;
+    - hiding spinner;
     - showing error message if there was an error during loading data from org.
     */
     loadPositionsWrapper(statusFilterValue, recordsPerPage, componentOffsetParam){

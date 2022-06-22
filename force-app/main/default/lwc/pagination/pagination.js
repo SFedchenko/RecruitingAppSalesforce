@@ -6,7 +6,7 @@ export default class Pagination extends LightningElement {
     pagesAmount; //number variable to store total amount of pages
 
     /*
-    Setter for "pagenumber" variable that is:
+    Setter for "pageNumber" variable that is:
     - receiving page number from parent component;
     - compositing appropriate array of numbers buttons to display on the page;
     - setting approprite accessibility for these numbers buttons.
@@ -20,14 +20,14 @@ export default class Pagination extends LightningElement {
         }
     }
 
-    //Getter for "pagenumber" variable
+    //Getter for "pageNumber" variable
     get pageNumber() {
         return this.currentPage;
     }
 
 
     /*
-    Setter for "pagesamount" variable that is:
+    Setter for "pagesAmountParent" variable that is:
     - receiving amount of pages from parent component;
     - compositing appropriate array of numbers buttons to display on the page;
     - setting approprite accessibility for these numbers buttons.
@@ -41,7 +41,7 @@ export default class Pagination extends LightningElement {
         }
     }
 
-    //Getter for "pagesamount" variable
+    //Getter for "pagesAmountParent" variable
     get pagesAmountParent() {
         return this.pagesAmount;
     }
