@@ -1,0 +1,37 @@
+<template>
+    <lightning-layout class="slds-align_absolute-center">
+
+        <lightning-layout-item class="slds-p-around_small">
+            <lightning-button variant="brand"
+                              label="Previous"
+                              icon-name="utility:chevronleft"
+                              onclick={previousHandler}
+                              disabled={previousButtonAccessibility}
+            >
+            </lightning-button>
+        </lightning-layout-item>
+
+        <template for:each={numbersButtonsArray} for:item="numberButton">
+            <lightning-layout-item key={numberButton.number} class="slds-p-vertical_small">
+                <lightning-button variant="brand"
+                                  label={numberButton.number}
+                                  onclick={numberButtonHandler}
+                                  disabled={numberButton.isDisabled}
+                >
+                </lightning-button>
+            </lightning-layout-item>
+        </template>
+
+        <lightning-layout-item class="slds-p-around_small">
+            <lightning-button variant="brand"
+                              label="Next"
+                              icon-name="utility:chevronright"
+                              icon-position="right"
+                              onclick={nextHandler}
+                              disabled={nextButtonAccessibility}
+            >
+            </lightning-button>
+        </lightning-layout-item>
+
+    </lightning-layout>
+</template>

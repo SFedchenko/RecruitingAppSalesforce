@@ -1,3 +1,9 @@
-SELECT Id, Name, Position__r.Name, Candidate__r.Name, (SELECT Name FROM Reviews__r)
+SELECT Id,
+       Name,
+       Position__r.Name,
+       Candidate__r.Name,
+       (SELECT Name FROM Reviews__r)
 FROM Job_Application__c
-WHERE (CreatedDate = LAST_N_DAYS:7 AND Owner.Profile.Name = 'Recruiter')
+WHERE (CreatedDate = LAST_N_DAYS:7
+       AND
+       Owner.Profile.Name = 'Recruiter')
