@@ -7,7 +7,7 @@
     </targets>
     <targetConfigs>
         <targetConfig targets="lightning__AppPage">
-            <property label="Records amount displayed per page" name="recordsPerPageParent" type="Integer" default="10" required="true"/>
+            <property label="Records amount displayed per page" name="recordsPerPageParent" type="Integer" min="1" default="10" required="true"/>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>

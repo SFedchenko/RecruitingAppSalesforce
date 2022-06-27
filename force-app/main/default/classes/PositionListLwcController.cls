@@ -1,12 +1,15 @@
 public with sharing class PositionListLwcController {
 
     public static List<Position__c> getPositions(String selectedFilterOption, Integer limitParam, Integer offsetParam) {
-        String q = 'SELECT Id, Name, Status__c, Start_Date__c, End_Date__c, Min_Salary__c, Max_Salary__c FROM Position__c';
+        String q = 'SELECT Id, Name, Status__c, Start_Date__c, End_Date__c, Min_Salary__c, Max_Salary__c, UserRecordAccess.HasEditAccess FROM Position__c';
         if (selectedFilterOption != 'All') {
             q += ' WHERE Status__c =: selectedFilterOption';
         }
         q += ' ORDER BY Name LIMIT :limitParam OFFSET :offsetParam';
-        return Database.query(q);
+        List<Position__c> positionsWithNotAppliedPermissions = Database.query(q);
+        SObjectAccessDecision securityDecision = Security.stripInaccessible(AccessType.READABLE, positionsWithNotAppliedPermissions, true);
+        List<Position__c> positionsWithAppliedPermissions = securityDecision.getRecords();
+        return positionsWithAppliedPermissions;
     }
     
     public static Integer getPositionsAmount(String selectedFilterOption) {
@@ -37,7 +40,7 @@ public with sharing class PositionListLwcController {
         try {
             update positions;
             return 'Success';
-        } catch (DmlException e) {
+        } catch (System.DmlException e) {
             return 'Error';
         }
   }

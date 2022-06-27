@@ -1,4 +1,5 @@
 public with sharing class PositionListController {
+    public Boolean showTable {get; set;}
     public String selectedFilterPicklistOption {get; set;}
     public List<Position__c> selectedPositionsList {get; set;}
     
@@ -21,24 +22,36 @@ public with sharing class PositionListController {
 	}
     
     public PageReference applyFilter() {
-        String q = 'SELECT Id, Name, Status__c, Start_Date__c, End_Date__c, Min_Salary__c, Max_Salary__c FROM Position__c';
+        String q = 'SELECT Id, Name, Status__c, Start_Date__c, End_Date__c, Min_Salary__c, Max_Salary__c, UserRecordAccess.HasEditAccess FROM Position__c';
         if (selectedFilterPicklistOption != 'All') {
             q += ' WHERE Status__c =: selectedFilterPicklistOption';
      	}
-        selectedPositionsList = Database.query(q);
-        if(selectedPositionsList.size() == 0) {
-            ApexPages.AddMessage(new ApexPages.Message(ApexPages.Severity.Info, 'There are no positions with status ' + '"' + selectedFilterPicklistOption + '"'));
-		}
+        try{
+            List<Position__c> positionsWithNotAppliedPermissions = Database.query(q);
+        	SObjectAccessDecision securityDecision = Security.stripInaccessible(AccessType.READABLE, positionsWithNotAppliedPermissions, true);
+            showTable = true;
+        	selectedPositionsList = securityDecision.getRecords();
+            if(selectedPositionsList.size() == 0) {
+                showTable = false;
+            	ApexPages.AddMessage(new ApexPages.Message(ApexPages.Severity.Info, System.Label.NoPositionsWithStatus + ' "' + selectedFilterPicklistOption + '"'));
+			}
+        } catch(QueryException qe) {
+            ApexPages.AddMessage(new ApexPages.Message(ApexPages.Severity.Error, System.Label.LoadingErrorMessage));
+            System.debug(qe.getMessage());
+        }
         return null;
     }
     
     public PageReference save() {
         try {
             update selectedPositionsList;
-            ApexPages.AddMessage(new ApexPages.Message(ApexPages.Severity.Info, 'Changes were saved succsessfully'));
-        } catch(System.DMLException e) {
-            ApexPages.addMessages(e);
-            return null;
+            ApexPages.AddMessage(new ApexPages.Message(ApexPages.Severity.Info, System.Label.ChangesSaved));
+            applyFilter();
+            
+        } catch(DMLException e) {
+            ApexPages.AddMessage(new ApexPages.Message(ApexPages.Severity.Error, System.Label.UpdatindRecordsError));
+            System.debug(e.getMessage());
+            applyFilter();
         }
         return null;
  	}
