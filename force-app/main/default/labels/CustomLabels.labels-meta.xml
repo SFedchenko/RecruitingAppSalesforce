@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>AllJobApps</fullName>
+        <categories>&apos;All job application&apos; table labels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>AllJobApps</shortDescription>
+        <value>All job applications</value>
+    </labels>
+    <labels>
+        <fullName>CandidateName</fullName>
+        <categories>&apos;All job application&apos; table labels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CandidateName</shortDescription>
+        <value>Candidate name</value>
+    </labels>
+    <labels>
+        <fullName>CandidatesCurrentReviewsAmount</fullName>
+        <categories>&apos;All job application&apos; table labels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CandidatesCurrentReviewsAmount</shortDescription>
+        <value>Candidate&apos;s current reviews amount</value>
+    </labels>
+    <labels>
+        <fullName>CandidatesMeanReviewGrade</fullName>
+        <categories>&apos;All job application&apos; table labels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CandidatesMeanReviewGrade</shortDescription>
+        <value>Candidate&apos;s mean review grade</value>
+    </labels>
+    <labels>
+        <fullName>CandidatesRecordOwner</fullName>
+        <categories>&apos;All job application&apos; table labels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CandidatesRecordOwner</shortDescription>
+        <value>Candidate&apos;s record owner</value>
+    </labels>
+    <labels>
+        <fullName>ChangesSaved</fullName>
+        <categories>&apos;All positions&apos; VF messages</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ChangesSaved</shortDescription>
+        <value>Changes were saved successfully</value>
+    </labels>
+    <labels>
+        <fullName>ChangesSavedLWC</fullName>
+        <categories>&apos;Mass positions&apos; status updating&apos; messages</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ChangesSavedLWC</shortDescription>
+        <value>Changes were saved successfully</value>
+    </labels>
+    <labels>
+        <fullName>DataLoadingErrorLWC</fullName>
+        <categories>&apos;Mass positions&apos; status updating&apos; messages</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DataLoadingErrorLWC</shortDescription>
+        <value>There was an error loading data from database</value>
+    </labels>
+    <labels>
+        <fullName>EndDateLWC</fullName>
+        <categories>&apos;Mass positions&apos; status updating&apos; table labels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>EndDateLWC</shortDescription>
+        <value>End date</value>
+    </labels>
+    <labels>
+        <fullName>EndDateVF</fullName>
+        <categories>&apos;All positions&apos; VF table labels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>EndDateVF</shortDescription>
+        <value>End date</value>
+    </labels>
+    <labels>
+        <fullName>FilterByStatus</fullName>
+        <categories>&apos;All positions&apos; VF table labels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>FilterByStatus</shortDescription>
+        <value>Filter by status:</value>
+    </labels>
+    <labels>
+        <fullName>FilterByStatusLWC</fullName>
+        <categories>&apos;Mass positions&apos; status updating&apos; table labels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>FilterByStatusLWC</shortDescription>
+        <value>Filter by status:</value>
+    </labels>
+    <labels>
+        <fullName>JobApplicationNumber</fullName>
+        <categories>&apos;All job application&apos; table labels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>JobApplicationNumber</shortDescription>
+        <value>Job application number</value>
+    </labels>
+    <labels>
+        <fullName>LoadingErrorMessage</fullName>
+        <categories>&apos;All positions&apos; VF messages</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>LoadingErrorMessage</shortDescription>
+        <value>There was an error during loading records</value>
+    </labels>
+    <labels>
+        <fullName>MaxSalaryLWC</fullName>
+        <categories>&apos;Mass positions&apos; status updating&apos; table labels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>MaxSalaryLWC</shortDescription>
+        <value>Max salary</value>
+    </labels>
+    <labels>
+        <fullName>MaxSalaryVF</fullName>
+        <categories>&apos;All positions&apos; VF table labels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>MaxSalaryVF</shortDescription>
+        <value>Max salary</value>
+    </labels>
+    <labels>
+        <fullName>MinSalaryLWC</fullName>
+        <categories>&apos;Mass positions&apos; status updating&apos; table labels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>MinSalaryLWC</shortDescription>
+        <value>Min salary</value>
+    </labels>
+    <labels>
+        <fullName>MinSalaryVF</fullName>
+        <categories>&apos;All positions&apos; VF table labels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>MinSalaryVF</shortDescription>
+        <value>Min salary</value>
+    </labels>
+    <labels>
+        <fullName>NextLWC</fullName>
+        <categories>&apos;Mass positions&apos; status updating&apos; pagination labels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>NextLWC</shortDescription>
+        <value>Next</value>
+    </labels>
+    <labels>
+        <fullName>NextVF</fullName>
+        <categories>&apos;All job application&apos; pagination labels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>NextVF</shortDescription>
+        <value>Next »</value>
+    </labels>
+    <labels>
+        <fullName>NoPositionsWithStatus</fullName>
+        <categories>&apos;All positions&apos; VF messages</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>NoPositionsWithStatus</shortDescription>
+        <value>There are no positions with status</value>
+    </labels>
+    <labels>
+        <fullName>NoPositionsWithStatusLWC</fullName>
+        <categories>&apos;Mass positions&apos; status updating&apos; messages</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>NoPositionsWithStatusLWC</shortDescription>
+        <value>There are no positions with status</value>
+    </labels>
+    <labels>
+        <fullName>NotModifiedAnyStatusLWC</fullName>
+        <categories>&apos;Mass positions&apos; status updating&apos; messages</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>NotModifiedAnyStatusLWC</shortDescription>
+        <value>Was not modified any status</value>
+    </labels>
+    <labels>
+        <fullName>OptionsLoadingErrorLWC</fullName>
+        <categories>&apos;Mass positions&apos; status updating&apos; messages</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OptionsLoadingErrorLWC</shortDescription>
+        <value>There was an error loading options for status filter/picklist from database</value>
+    </labels>
+    <labels>
+        <fullName>Page</fullName>
+        <categories>&apos;All job application&apos; pagination labels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page</shortDescription>
+        <value>Page:</value>
+    </labels>
+    <labels>
+        <fullName>PositionStatus</fullName>
+        <categories>&apos;All job application&apos; table labels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>PositionStatus</shortDescription>
+        <value>Position status</value>
+    </labels>
+    <labels>
+        <fullName>PositionTitle</fullName>
+        <categories>&apos;All job application&apos; table labels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>PositionTitle</shortDescription>
+        <value>Position title</value>
+    </labels>
+    <labels>
+        <fullName>PositionTitleLWC</fullName>
+        <categories>&apos;Mass positions&apos; status updating&apos; table labels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>PositionTitleLWC</shortDescription>
+        <value>Position title</value>
+    </labels>
+    <labels>
+        <fullName>PositionTitleVF</fullName>
+        <categories>&apos;All positions&apos; VF table labels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>PositionTitleVF</shortDescription>
+        <value>Position title</value>
+    </labels>
+    <labels>
+        <fullName>Positions</fullName>
+        <categories>&apos;All positions&apos; VF table labels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Positions</shortDescription>
+        <value>Positions</value>
+    </labels>
+    <labels>
+        <fullName>PositionsRecordOwner</fullName>
+        <categories>&apos;All job application&apos; table labels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>PositionsRecordOwner</shortDescription>
+        <value>Position&apos;s record owner</value>
+    </labels>
+    <labels>
+        <fullName>PositionsTotalReviewsAmount</fullName>
+        <categories>&apos;All job application&apos; table labels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>PositionsTotalReviewsAmount</shortDescription>
+        <value>Position&apos;s total reviews amount</value>
+    </labels>
+    <labels>
+        <fullName>PreviousLWC</fullName>
+        <categories>&apos;Mass positions&apos; status updating&apos; pagination labels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>PreviousLWC</shortDescription>
+        <value>Previous</value>
+    </labels>
+    <labels>
+        <fullName>PreviousVF</fullName>
+        <categories>&apos;All job application&apos; pagination labels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>PreviousVF</shortDescription>
+        <value>« Previous</value>
+    </labels>
+    <labels>
+        <fullName>RecordsPerPage</fullName>
+        <categories>&apos;All job application&apos; pagination labels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RecordsPerPage</shortDescription>
+        <value>Records per page:</value>
+    </labels>
+    <labels>
+        <fullName>SaveLWC</fullName>
+        <categories>&apos;Mass positions&apos; status updating&apos; table labels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>SaveLWC</shortDescription>
+        <value>Save</value>
+    </labels>
+    <labels>
+        <fullName>SaveVF</fullName>
+        <categories>&apos;All positions&apos; VF table labels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>SaveVF</shortDescription>
+        <value>Save</value>
+    </labels>
+    <labels>
+        <fullName>StartDateLWC</fullName>
+        <categories>&apos;Mass positions&apos; status updating&apos; table labels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>StartDateLWC</shortDescription>
+        <value>Start date</value>
+    </labels>
+    <labels>
+        <fullName>StartDateVF</fullName>
+        <categories>&apos;All positions&apos; VF table labels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>StartDateVF</shortDescription>
+        <value>Start date</value>
+    </labels>
+    <labels>
+        <fullName>StatusLWC</fullName>
+        <categories>&apos;Mass positions&apos; status updating&apos; table labels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>StatusLWC</shortDescription>
+        <value>Status</value>
+    </labels>
+    <labels>
+        <fullName>StatusVF</fullName>
+        <categories>&apos;All positions&apos; VF table labels</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>StatusVF</shortDescription>
+        <value>Status</value>
+    </labels>
+    <labels>
+        <fullName>UpdatindRecordsError</fullName>
+        <categories>&apos;All positions&apos; VF messages</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>UpdatindRecordsError</shortDescription>
+        <value>There was an error during updating records</value>
+    </labels>
+    <labels>
+        <fullName>UpdatindRecordsErrorLWC</fullName>
+        <categories>&apos;Mass positions&apos; status updating&apos; messages</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>UpdatindRecordsErrorLWC</shortDescription>
+        <value>There was an error updating records</value>
+    </labels>
+</CustomLabels>

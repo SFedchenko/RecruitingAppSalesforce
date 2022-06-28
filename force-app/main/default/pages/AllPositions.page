@@ -1,12 +1,12 @@
-<apex:page controller="PositionListController">
+<apex:page controller="PositionListVFController">
     <apex:form >
     	<apex:pageBlock title="{! $Label.Positions }" id="positionsPageBlock">
             <apex:pageMessages />
             
         	{! $Label.FilterByStatus }
-            <apex:selectList value="{! selectedFilterPicklistOption }" size="1">
+            <apex:selectList value="{! selectedStatusFilterOption }" size="1">
                 <apex:actionSupport event="onchange" action="{! ApplyFilter }" rerender="positionsPageBlock"/>
-                <apex:selectOptions value="{! FilterPicklistOptions }"/>
+                <apex:selectOptions value="{! statusFilterOptions }"/>
             </apex:selectList>
                         
         	<apex:pageBlockTable value="{! selectedPositionsList }" var="pos" rendered="{! showTable }">

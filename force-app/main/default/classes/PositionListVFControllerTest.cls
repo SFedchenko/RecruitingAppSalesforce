@@ -1,19 +1,5 @@
 @isTest
-private class PositionListControllerTest {
-    
-    @isTest
-    static void testGetFilterPicklistOptions() {
-        
-        List<SelectOption> methodFilterPicklistOptions = PositionListController.getFilterPicklistOptions();
-        
-        List<String> stringValues = new List<String>();
-        for(SelectOption option : methodFilterPicklistOptions) {
-            stringValues.add(option.getValue());            
-        }
-        Boolean exists = stringValues.contains('All');
-        System.assertEquals(true, exists);
-    }
-    
+private class PositionListVFControllerTest {
     @isTest
     static void testApplyFilterForExistingPositions() {
         
@@ -23,8 +9,8 @@ private class PositionListControllerTest {
         
         PageReference pageRef = Page.AllPositions;
         Test.setCurrentPage(pageRef);
-        PositionListController testController = new PositionListController();
-        testController.selectedFilterPicklistOption = 'Open';
+        PositionListVFController testController = new PositionListVFController();
+        testController.selectedStatusFilterOption = 'Open';
         testController.applyFilter();
         List<Position__c> methodSelectedPositionsList = testController.selectedPositionsList;
         
@@ -42,8 +28,8 @@ private class PositionListControllerTest {
         
         PageReference pageRef = Page.AllPositions;
         Test.setCurrentPage(pageRef);
-        PositionListController testController = new PositionListController();
-        testController.selectedFilterPicklistOption = 'Closed';
+        PositionListVFController testController = new PositionListVFController();
+        testController.selectedStatusFilterOption = 'Closed';
         testController.applyFilter();
         List<Position__c> methodSelectedPositionsList = testController.selectedPositionsList;
         
@@ -62,8 +48,8 @@ private class PositionListControllerTest {
         
         PageReference pageRef = Page.AllPositions;
         Test.setCurrentPage(pageRef);
-        PositionListController testController = new PositionListController();
-        testController.selectedFilterPicklistOption = 'Closed';
+        PositionListVFController testController = new PositionListVFController();
+        testController.selectedStatusFilterOption = 'Closed';
         testController.applyFilter();
         
         Boolean check = false;
@@ -90,14 +76,14 @@ private class PositionListControllerTest {
         
         PageReference pageRef = Page.AllPositions;
         Test.setCurrentPage(pageRef);
-        PositionListController testController = new PositionListController();
-        testController.selectedFilterPicklistOption = 'Open';
+        PositionListVFController testController = new PositionListVFController();
+        testController.selectedStatusFilterOption = 'Open';
         testController.applyFilter();
         List<Position__c> methodSelectedPositionsList = testController.selectedPositionsList;
         Position__c anyPosition = methodSelectedPositionsList[0];
         anyPosition.Status__c = 'Closed';
         testController.save();
-        testController.selectedFilterPicklistOption = 'Closed';
+        testController.selectedStatusFilterOption = 'Closed';
         testController.applyFilter();
         List<Position__c> methodSelectedPositionsList2 = testController.selectedPositionsList;
         
@@ -115,8 +101,8 @@ private class PositionListControllerTest {
         
         PageReference pageRef = Page.AllPositions;
         Test.setCurrentPage(pageRef);
-        PositionListController testController = new PositionListController();
-        testController.selectedFilterPicklistOption = 'Open';
+        PositionListVFController testController = new PositionListVFController();
+        testController.selectedStatusFilterOption = 'Open';
         testController.applyFilter();
         List<Position__c> methodSelectedPositionsList = testController.selectedPositionsList;
         Position__c anyPosition = methodSelectedPositionsList[0];
@@ -147,8 +133,8 @@ private class PositionListControllerTest {
         
         PageReference pageRef = Page.AllPositions;
         Test.setCurrentPage(pageRef);
-        PositionListController testController = new PositionListController();
-        testController.selectedFilterPicklistOption = 'Open';
+        PositionListVFController testController = new PositionListVFController();
+        testController.selectedStatusFilterOption = 'Open';
         testController.applyFilter();
         List<Position__c> methodSelectedPositionsList = testController.selectedPositionsList;
         Position__c anyPosition = methodSelectedPositionsList[0];
@@ -179,8 +165,8 @@ private class PositionListControllerTest {
         
         PageReference pageRef = Page.AllPositions;
         Test.setCurrentPage(pageRef);
-        PositionListController testController = new PositionListController();
-        testController.selectedFilterPicklistOption = 'Closed';
+        PositionListVFController testController = new PositionListVFController();
+        testController.selectedStatusFilterOption = 'Closed';
         testController.applyFilter();
         
         Boolean check = false;
@@ -197,43 +183,5 @@ private class PositionListControllerTest {
         
         System.assertEquals (true, check);
         System.assertEquals (false, testController.showTable);
-    }
-    
-    @isTest
-    static void testPermissions() {
-        
-        List<Position__c> testPositionsWithStatusOpen = TestFactory.generatePositions('Open', 2);
-        
-        String uniqueUserName = 'standardemployee' + DateTime.now().getTime() + '@testorg.com';
-        Profile p = [SELECT Id FROM Profile WHERE Name='Standard Employee'];
-        User u = new User(Alias = 'standt',
-                          Email = 'standardemployee@testorg.com',
-                          EmailEncodingKey = 'UTF-8',
-                          LastName = 'Testing',
-                          LanguageLocaleKey = 'en_US',
-                          LocaleSidKey = 'en_US',
-                          ProfileId = p.Id,
-                          TimeZoneSidKey = 'America/Los_Angeles',
-                          UserName = uniqueUserName);
-        
-        System.runAs(u) {
-            
-            Test.startTest();
-        
-        	PageReference pageRef = Page.AllPositions;
-        	Test.setCurrentPage(pageRef);
-        	PositionListController testController = new PositionListController();
-        	testController.selectedFilterPicklistOption = 'Open';
-        	testController.applyFilter();
-        	List<Position__c> methodSelectedPositionsList = testController.selectedPositionsList;
-            Position__c position0 = methodSelectedPositionsList[0];
-            Boolean minSalaryIsSet = position0.isSet('Min_Salary__c');
-            Boolean maxSalaryIsSet = position0.isSet('Max_Salary__c');
-        
-        	Test.stopTest();
-        
-        	System.assertEquals (false, minSalaryIsSet);
-            System.assertEquals (false, maxSalaryIsSet);
-        }
     }
 }

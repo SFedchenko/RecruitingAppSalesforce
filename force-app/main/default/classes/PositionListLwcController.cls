@@ -10,16 +10,20 @@ public class PositionListLwcController {
     @AuraEnabled
     public static PositionsWrapper getPositionsWrapper(String selectedFilterOptionWrapper, Integer limitParamWrapper, Integer offsetParamWrapper){
         PositionsWrapper componentPositionsWrapper = new PositionsWrapper();
-        componentPositionsWrapper.positionsRecords = PositionListLwcService.positionsWithFieldsAndObjectAccess(
-            PositionsSelector.selectByStatusWithLimitAndOffset(selectedFilterOptionWrapper, limitParamWrapper, offsetParamWrapper)
+        componentPositionsWrapper.positionsRecords = PositionService.positionsWithFieldsAndObjectAccess(
+            PositionSelector.selectByStatusWithLimitAndOffset(selectedFilterOptionWrapper, limitParamWrapper, offsetParamWrapper)
         );
-        componentPositionsWrapper.positionsAmount = PositionsSelector.selectAmountByStatus(selectedFilterOptionWrapper);
+        componentPositionsWrapper.positionsAmount = PositionSelector.selectAmountByStatus(selectedFilterOptionWrapper);
         return componentPositionsWrapper;
     }
 
     @AuraEnabled
     public static String updatePositions(List<Position__c> positions) {
-        String s = PositionListLwcService.updateRecords(positions);
-        return s;
+        try {
+            update positions;
+            return 'Success';
+        } catch (DmlException e) {
+            return 'Error';
+        }
   }
 }

@@ -1,38 +1,6 @@
 @isTest
 private class PositionListLwcControllerTest {
     
-	@isTest
-    static void testGetPositions() {
-        List<Position__c> testPositionsWithStatusOpen = TestFactory.generatePositions('Open', 2);
-        List<Position__c> testPositionsWithStatusClosed = TestFactory.generatePositions('Closed', 2);
-        
-        Test.startTest();
-        
-        List<Position__c> methodPositionsListWithStatusOpen = PositionListLwcController.getPositions('Open', 2, 0);
-        List<Position__c> methodPositionsListWithStatusAll = PositionListLwcController.getPositions('All', 4, 0);
-        
-        Test.stopTest();
-        
-        System.assertEquals (testPositionsWithStatusOpen.size(), methodPositionsListWithStatusOpen.size());
-        System.assertEquals(4, methodPositionsListWithStatusAll.size());
-    }
-    
-    @isTest
-    static void testGetPositionsAmount() {
-        List<Position__c> testPositionsWithStatusOpen = TestFactory.generatePositions('Open', 2);
-        List<Position__c> testPositionsWithStatusClosed = TestFactory.generatePositions('Closed', 2);
-        
-        Test.startTest();
-        
-        Integer methodPositionsAmountWithStatusOpen = PositionListLwcController.getPositionsAmount('Open');
-        Integer methodPositionsAmountWithStatusAll = PositionListLwcController.getPositionsAmount('All');
-        
-        Test.stopTest();
-        
-        System.assertEquals (2, methodPositionsAmountWithStatusOpen);
-        System.assertEquals(4, methodPositionsAmountWithStatusAll);
-    }
-    
     @isTest
     static void testGetPositionsWrapper() {
         List<Position__c> testPositionsWithStatusOpen = TestFactory.generatePositions('Open', 2);
@@ -54,8 +22,8 @@ private class PositionListLwcControllerTest {
         
         Test.startTest();
         
-        List<Position__c> methodPositionsListWithStatusOpen = PositionListLwcController.getPositions('Open', 2, 0);
-        List<Position__c> methodPositionsListWithStatusClosed = PositionListLwcController.getPositions('Closed', 2, 0);
+        List<Position__c> methodPositionsListWithStatusOpen = PositionListLwcController.getPositionsWrapper('Open', 2, 0).positionsRecords;
+        List<Position__c> methodPositionsListWithStatusClosed = PositionListLwcController.getPositionsWrapper('Closed', 2, 0).positionsRecords;
         methodPositionsListWithStatusOpen[1].Status__c = 'Closed';
         methodPositionsListWithStatusClosed[1].Status__c = 'AnyStatus';
         String methodMessageFromTryBlock = PositionListLwcController.updatePositions(methodPositionsListWithStatusOpen);
@@ -87,7 +55,7 @@ private class PositionListLwcControllerTest {
             
             Test.startTest();
             
-            List<Position__c> methodPositionsListWithStatusOpen = PositionListLwcController.getPositions('Open', 2, 0);
+            List<Position__c> methodPositionsListWithStatusOpen = PositionListLwcController.getPositionsWrapper('Open', 2, 0).positionsRecords;
             Position__c position0 = methodPositionsListWithStatusOpen[0];
             Boolean minSalaryIsSet = position0.isSet('Min_Salary__c');
             Boolean maxSalaryIsSet = position0.isSet('Max_Salary__c');
