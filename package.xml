@@ -4,5 +4,9 @@
         <members>PositionListLwcController</members>
         <name>ApexClass</name>
     </types>
+    <types>
+        <members>PositionListController</members>
+        <name>ApexClass</name>
+    </types>
     <version>54.0</version>
 </Package>

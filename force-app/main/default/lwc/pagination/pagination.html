@@ -3,7 +3,7 @@
 
         <lightning-layout-item class="slds-p-around_small">
             <lightning-button variant="brand"
-                              label="Previous"
+                              label={labels.PreviousLWC}
                               icon-name="utility:chevronleft"
                               onclick={previousHandler}
                               disabled={previousButtonAccessibility}
@@ -24,7 +24,7 @@
 
         <lightning-layout-item class="slds-p-around_small">
             <lightning-button variant="brand"
-                              label="Next"
+                              label={labels.NextLWC}
                               icon-name="utility:chevronright"
                               icon-position="right"
                               onclick={nextHandler}

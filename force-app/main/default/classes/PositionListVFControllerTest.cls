@@ -1,19 +1,5 @@
 @isTest
-private class PositionListControllerTest {
-    
-    @isTest
-    static void testGetFilterPicklistOptions() {
-        
-        List<SelectOption> methodFilterPicklistOptions = PositionListController.getFilterPicklistOptions();
-        
-        List<String> stringValues = new List<String>();
-        for(SelectOption option : methodFilterPicklistOptions) {
-            stringValues.add(option.getValue());            
-        }
-        Boolean exists = stringValues.contains('All');
-        System.assertEquals(true, exists);
-    }
-    
+private class PositionListVFControllerTest {
     @isTest
     static void testApplyFilterForExistingPositions() {
         
@@ -23,14 +9,14 @@ private class PositionListControllerTest {
         
         PageReference pageRef = Page.AllPositions;
         Test.setCurrentPage(pageRef);
-        PositionListController testController = new PositionListController();
-        testController.selectedFilterPicklistOption = 'Open';
+        PositionListVFController testController = new PositionListVFController();
+        testController.selectedStatusFilterOption = 'Open';
         testController.applyFilter();
         List<Position__c> methodSelectedPositionsList = testController.selectedPositionsList;
         
         Test.stopTest();
         
-        System.assertEquals (testPositionsWithStatusOpen, methodSelectedPositionsList);
+        System.assertEquals (testPositionsWithStatusOpen.size(), methodSelectedPositionsList.size());
     }
     
     @isTest
@@ -42,8 +28,8 @@ private class PositionListControllerTest {
         
         PageReference pageRef = Page.AllPositions;
         Test.setCurrentPage(pageRef);
-        PositionListController testController = new PositionListController();
-        testController.selectedFilterPicklistOption = 'Closed';
+        PositionListVFController testController = new PositionListVFController();
+        testController.selectedStatusFilterOption = 'Closed';
         testController.applyFilter();
         List<Position__c> methodSelectedPositionsList = testController.selectedPositionsList;
         
@@ -62,8 +48,8 @@ private class PositionListControllerTest {
         
         PageReference pageRef = Page.AllPositions;
         Test.setCurrentPage(pageRef);
-        PositionListController testController = new PositionListController();
-        testController.selectedFilterPicklistOption = 'Closed';
+        PositionListVFController testController = new PositionListVFController();
+        testController.selectedStatusFilterOption = 'Closed';
         testController.applyFilter();
         
         Boolean check = false;
@@ -90,14 +76,14 @@ private class PositionListControllerTest {
         
         PageReference pageRef = Page.AllPositions;
         Test.setCurrentPage(pageRef);
-        PositionListController testController = new PositionListController();
-        testController.selectedFilterPicklistOption = 'Open';
+        PositionListVFController testController = new PositionListVFController();
+        testController.selectedStatusFilterOption = 'Open';
         testController.applyFilter();
         List<Position__c> methodSelectedPositionsList = testController.selectedPositionsList;
         Position__c anyPosition = methodSelectedPositionsList[0];
         anyPosition.Status__c = 'Closed';
         testController.save();
-        testController.selectedFilterPicklistOption = 'Closed';
+        testController.selectedStatusFilterOption = 'Closed';
         testController.applyFilter();
         List<Position__c> methodSelectedPositionsList2 = testController.selectedPositionsList;
         
@@ -107,7 +93,7 @@ private class PositionListControllerTest {
     }
     
     @isTest
-    static void testSaveMessage() {
+    static void testChangesSavedMessage() {
         
         List<Position__c> testPositionsWithStatusOpen = TestFactory.generatePositions('Open', 3);
         
@@ -115,8 +101,8 @@ private class PositionListControllerTest {
         
         PageReference pageRef = Page.AllPositions;
         Test.setCurrentPage(pageRef);
-        PositionListController testController = new PositionListController();
-        testController.selectedFilterPicklistOption = 'Open';
+        PositionListVFController testController = new PositionListVFController();
+        testController.selectedStatusFilterOption = 'Open';
         testController.applyFilter();
         List<Position__c> methodSelectedPositionsList = testController.selectedPositionsList;
         Position__c anyPosition = methodSelectedPositionsList[0];
@@ -126,7 +112,7 @@ private class PositionListControllerTest {
         Boolean check = false;
         ApexPages.Message[] pageMessages = ApexPages.getMessages();
         for(ApexPages.Message msg : pageMessages){
-            if (msg.getDetail().contains('Changes were saved succsessfully')) {
+            if (msg.getDetail().contains('Changes were saved successfully')) {
                 check = true;
             }else{
                 check = false;
@@ -136,5 +122,66 @@ private class PositionListControllerTest {
         Test.stopTest();
         
         System.assertEquals (true, check);
+    }
+    
+    @isTest
+    static void testUpdatindRecordsErrorMessage() {
+        
+        List<Position__c> testPositionsWithStatusOpen = TestFactory.generatePositions('Open', 3);
+        
+        Test.startTest();
+        
+        PageReference pageRef = Page.AllPositions;
+        Test.setCurrentPage(pageRef);
+        PositionListVFController testController = new PositionListVFController();
+        testController.selectedStatusFilterOption = 'Open';
+        testController.applyFilter();
+        List<Position__c> methodSelectedPositionsList = testController.selectedPositionsList;
+        Position__c anyPosition = methodSelectedPositionsList[0];
+        anyPosition.Status__c = 'AnyStatus';
+        testController.save();
+        
+        Boolean check = false;
+        ApexPages.Message[] pageMessages = ApexPages.getMessages();
+        for(ApexPages.Message msg : pageMessages){
+            if (msg.getDetail().contains('There was an error during updating records')) {
+                check = true;
+            }else{
+                check = false;
+            }
+        }
+        
+        Test.stopTest();
+        
+        System.assertEquals (true, check);
+    }
+    
+    @isTest
+    static void testNoPositionsWithStatusMessage() {
+        
+        List<Position__c> testPositionsWithStatusOpen = TestFactory.generatePositions('Open', 3);
+        
+        Test.startTest();
+        
+        PageReference pageRef = Page.AllPositions;
+        Test.setCurrentPage(pageRef);
+        PositionListVFController testController = new PositionListVFController();
+        testController.selectedStatusFilterOption = 'Closed';
+        testController.applyFilter();
+        
+        Boolean check = false;
+        ApexPages.Message[] pageMessages = ApexPages.getMessages();
+        for(ApexPages.Message msg : pageMessages){
+            if (msg.getDetail().contains('There are no positions with status "Closed"')) {
+                check = true;
+            }else{
+                check = false;
+            }
+        }
+        
+        Test.stopTest();
+        
+        System.assertEquals (true, check);
+        System.assertEquals (false, testController.showTable);
     }
 }

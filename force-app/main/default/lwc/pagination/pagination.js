@@ -1,6 +1,13 @@
 import { LightningElement, api } from 'lwc';
+import PreviousLWC from '@salesforce/label/c.PreviousLWC';
+import NextLWC from '@salesforce/label/c.NextLWC';
 
 export default class Pagination extends LightningElement {
+
+    labels = {
+        PreviousLWC,
+        NextLWC,
+    };
 
     currentPage; //number variable to store number of current page
     pagesAmount; //number variable to store total amount of pages

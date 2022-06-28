@@ -6,9 +6,43 @@ import POSITION__C_OBJECT from '@salesforce/schema/Position__c';
 import STATUS__C_FIELD from '@salesforce/schema/Position__c.Status__c';
 import getPositionsWrapper from '@salesforce/apex/PositionListLwcController.getPositionsWrapper';
 import updatePositions from '@salesforce/apex/PositionListLwcController.updatePositions';
+import FilterByStatusLWC from '@salesforce/label/c.FilterByStatusLWC';
+import SaveLWC from '@salesforce/label/c.SaveLWC';
+import PositionTitleLWC from '@salesforce/label/c.PositionTitleLWC';
+import StatusLWC from '@salesforce/label/c.StatusLWC';
+import StartDateLWC from '@salesforce/label/c.StartDateLWC';
+import EndDateLWC from '@salesforce/label/c.EndDateLWC';
+import MinSalaryLWC from '@salesforce/label/c.MinSalaryLWC';
+import MaxSalaryLWC from '@salesforce/label/c.MaxSalaryLWC';
+import OptionsLoadingErrorLWC from '@salesforce/label/c.OptionsLoadingErrorLWC';
+import NoPositionsWithStatusLWC from '@salesforce/label/c.NoPositionsWithStatusLWC';
+import DataLoadingErrorLWC from '@salesforce/label/c.DataLoadingErrorLWC';
+import NotModifiedAnyStatusLWC from '@salesforce/label/c.NotModifiedAnyStatusLWC';
+import ChangesSavedLWC from '@salesforce/label/c.ChangesSavedLWC';
+import UpdatindRecordsErrorLWC from '@salesforce/label/c.UpdatindRecordsErrorLWC';
 
 
 export default class PositionListLwc extends NavigationMixin(LightningElement) {
+
+    labels = {
+        FilterByStatusLWC,
+        SaveLWC,
+        PositionTitleLWC,
+        StatusLWC,
+        StartDateLWC,
+        EndDateLWC,
+        MinSalaryLWC,
+        MaxSalaryLWC,
+    };
+
+    messages = {
+        OptionsLoadingErrorLWC,
+        NoPositionsWithStatusLWC,
+        DataLoadingErrorLWC,
+        NotModifiedAnyStatusLWC,
+        ChangesSavedLWC,
+        UpdatindRecordsErrorLWC,
+    }
 
     saveButtonAccessibility = true; //boolean variable to store "disabled" attribute of "Save" button to be able to enable it when user will change status of record in the page table
     selectedFilterOption = 'Open'; //string variable to store status picklist filter selected option with default value in it
@@ -64,7 +98,8 @@ export default class PositionListLwc extends NavigationMixin(LightningElement) {
             this.additionalPicklistValues = [{value: 'All', label: 'All'}];
             this.filterPicklistValues = [...this.additionalPicklistValues, ...this.picklistValues];
         } else if ( error ) {
-            this.showMessage('There was a problem loading options for status filter/picklist from database', '', 'error');
+            this.showMessage(this.messages.OptionsLoadingErrorLWC, '', 'error');
+            console.log(error);
         }
     }
 
@@ -89,18 +124,22 @@ export default class PositionListLwc extends NavigationMixin(LightningElement) {
                 this.showSpinner = true;
                 this.saveButtonAccessibility = true;
                 this.selectedPositions = data.positionsRecords;
+                for(let i=0; i<this.selectedPositions.length; i++){
+                    this.selectedPositions[i].UserRecordAccess.HasEditAccess = !this.selectedPositions[i].UserRecordAccess.HasEditAccess;
+                }
                 this.pagesAmountParent = Math.ceil(data.positionsAmount / this.recordsPerPageParent);
                 this.modifiedPositions = JSON.parse(JSON.stringify(this.selectedPositions));
                 if (this.selectedPositions.length === 0){
                     this.showTable = false;
-                    this.showMessage(`There are no positions with status "${statusFilterValue}"`, '', 'warning');
+                    this.showMessage(`${this.messages.NoPositionsWithStatusLWC} "${statusFilterValue}"`, '', 'warning');
                 } else {
                     this.showTable = true;
                 }
                 this.showSpinner = false;
             })
             .catch (error => {
-				this.showMessage('There was a problem loading data from database', '', 'error');
+				this.showMessage(this.messages.DataLoadingErrorLWC, '', 'error');
+                console.log(error);
 			});
         
     }
@@ -157,7 +196,7 @@ export default class PositionListLwc extends NavigationMixin(LightningElement) {
             }
         }
         if(positionsToUpdate.length === 0){
-            this.showMessage('Was not modified any status', '', 'warning');
+            this.showMessage(this.messages.NotModifiedAnyStatusLWC, '', 'warning');
             this.saveButtonAccessibility = true;
         } else {
             updatePositions ({
@@ -165,15 +204,16 @@ export default class PositionListLwc extends NavigationMixin(LightningElement) {
             })
                 .then (data => {
                     if (data === 'Success') {
-                        this.showMessage('Changes were saved successfully', '', 'success');
+                        this.showMessage(this.messages.ChangesSavedLWC, '', 'success');
                         this.connectedCallback();
                     } else if (data === 'Error') {
-                        this.showMessage('There was an error updating records. Please try again', '', 'error');
+                        this.showMessage(this.messages.UpdatindRecordsErrorLWC, '', 'error');
                     }
                     
                 })
                 .catch (error => {
-                    this.showMessage('There was an error updating records. Please try again', '', 'error');
+                    this.showMessage(this.messages.UpdatindRecordsErrorLWC, '', 'error');
+                    console.log(error);
                 });
         }
     }

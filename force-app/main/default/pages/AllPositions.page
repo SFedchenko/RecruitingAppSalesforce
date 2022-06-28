@@ -1,31 +1,32 @@
-<apex:page controller="positionListController">
-    <apex:form >    
-    	<apex:pageBlock title="Positions" id="positionsPageBlock">
+<apex:page controller="PositionListVFController">
+    <apex:form >
+    	<apex:pageBlock title="{! $Label.Positions }" id="positionsPageBlock">
             <apex:pageMessages />
             
-        	Filter by Status:
-            <apex:selectList value="{!selectedFilterPicklistOption}" size="1">
-                <apex:actionSupport event="onchange" action="{!ApplyFilter}" rerender="positionsPageBlock"/>
-                <apex:selectOptions value="{!FilterPicklistOptions}"/>
+        	{! $Label.FilterByStatus }
+            <apex:selectList value="{! selectedStatusFilterOption }" size="1">
+                <apex:actionSupport event="onchange" action="{! ApplyFilter }" rerender="positionsPageBlock"/>
+                <apex:selectOptions value="{! statusFilterOptions }"/>
             </apex:selectList>
                         
-        	<apex:pageBlockTable value="{! selectedPositionsList }" var="pos" id="positionsTable">
-                <apex:column headerValue="Position title">
+        	<apex:pageBlockTable value="{! selectedPositionsList }" var="pos" rendered="{! showTable }">
+                <apex:column headerValue="{! $Label.PositionTitleVF }">
                     <apex:commandLink value="{! pos.Name }" action="/{! pos.Id }"/>
                 </apex:column>
-                <apex:column headerValue="Status">
-                    <apex:inputField value="{! pos.Status__c }"/>
+                <apex:column headerValue="{! $Label.StatusVF }">
+                    <apex:inputField value="{! pos.Status__c }" rendered="{! pos.UserRecordAccess.HasEditAccess }"/>
+                    <apex:inputField value="{! pos.Status__c }" html-disabled="true" rendered="{! !pos.UserRecordAccess.HasEditAccess }"/>
               	</apex:column>
-            	<apex:column headerValue="Start date" value="{! pos.Start_Date__c }"/>
-                <apex:column headerValue="End date" value="{! pos.End_Date__c }"/>
-                <apex:column headerValue="Min salary" value="{! pos.Min_Salary__c }"/>
-                <apex:column headerValue="Max salary" value="{! pos.Max_Salary__c }"/>
+            	<apex:column headerValue="{! $Label.StartDateVF }" value="{! pos.Start_Date__c }"/>
+                <apex:column headerValue="{! $Label.EndDateVF }" value="{! pos.End_Date__c }"/>
+                <apex:column headerValue="{! $Label.MinSalaryVF }" value="{! pos.Min_Salary__c }"/>
+                <apex:column headerValue="{! $Label.MaxSalaryVF }" value="{! pos.Max_Salary__c }"/>
         	</apex:pageBlockTable>
             
             <table style="width: 100%">
                 <tr>
             		<td align="center">
-        				<apex:commandButton action="{! save }" value="Save" />
+        				<apex:commandButton action="{! save }" value="{! $Label.SaveVF }" rendered="{! showTable }"/>
             		</td>
                 </tr>
             </table>
