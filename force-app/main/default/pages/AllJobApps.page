@@ -10,7 +10,7 @@
                 <apex:column headerValue="Position's total reviews amount" value="{! jobApp.Position__r.Total_reviews_amount__c }"/>
                 <apex:column headerValue="Position's record owner" value="{! jobApp.Position__r.OwnerId }"/>
             	<apex:column headerValue="Candidate name" value="{! jobApp.Candidate__c }"/>
-                <apex:column headerValue="Candidate's current reviews amount" value="{! jobApp.Reviews_amount__c }"/>
+                <apex:column headerValue="Candidate's current reviews amount" value="{! jobApp.Current_reviews_amount__c }"/>
                 <apex:column headerValue="Candidate's mean review grade" value="{! jobApp.Mean_review_grade__c }"/>
                 <apex:column headerValue="Candidate's record owner" value="{! jobApp.Candidate__r.OwnerId }"/>
         	</apex:pageBlockTable>

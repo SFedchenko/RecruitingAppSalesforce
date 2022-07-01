@@ -1,4 +1,9 @@
 public class PositionSelector {
+
+    public static List<Position__c> selectByIds(Set<Id> Ids) {
+        String q = 'SELECT Id, Status__c FROM Position__c WHERE Id IN :Ids';
+        return Database.query(q);
+    }
     
     public static List<Position__c> selectByStatus(String selectedFilterOption) {
         String q = 'SELECT Id, Name, Status__c, Start_Date__c, End_Date__c, Min_Salary__c, Max_Salary__c, UserRecordAccess.HasEditAccess FROM Position__c';
