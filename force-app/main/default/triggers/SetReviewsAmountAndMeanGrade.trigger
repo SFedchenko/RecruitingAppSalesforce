@@ -5,8 +5,7 @@ trigger SetReviewsAmountAndMeanGrade on Review__c (after insert, after update) {
     if (Trigger.isInsert) {
         
     	for (Review__c r : Trigger.New) {
-            Id jaId = r.Job_Application__c;
-            jaIds.add(jaId);
+            jaIds.add(r.Job_Application__c);
         }
         
     	List<Job_Application__c> jobAppsToUpdate = JobApplicationService.jobAppsToUpdate(jaIds);
@@ -15,13 +14,13 @@ trigger SetReviewsAmountAndMeanGrade on Review__c (after insert, after update) {
     
     if (Trigger.isUpdate) {
         
-        for (Review__c rOld : Trigger.Old) {
-            for (Review__c rNew : Trigger.New) {
-                if (rOld.Grade__c != rNew.Grade__c) {
-                    Id jaId = rNew.Job_Application__c;
-                    jaIds.add(jaId);
+        for (Id reviewId : Trigger.oldMap.keySet()) {
+            if (Trigger.oldMap.get( reviewId ).Grade__c != Trigger.newMap.get( reviewId ).Grade__c
+                ||
+                Trigger.oldMap.get( reviewId ).Job_Application__c != Trigger.newMap.get( reviewId ).Job_Application__c) {
+                    jaIds.add( Trigger.oldMap.get( reviewId ).Job_Application__c );
+                    jaIds.add( Trigger.newMap.get( reviewId ).Job_Application__c );
                 }
-            }
         }
         
         if (jaIds.size() > 0) {
