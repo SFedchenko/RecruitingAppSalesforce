@@ -1,7 +1,9 @@
 trigger SetPositionEndDate on Position__c (before update) {
-    for (Id positionId : Trigger.oldMap.keySet()) {
-        if (Trigger.oldMap.get( positionId ).Status__c != 'Closed' && Trigger.newMap.get( positionId ).Status__c == 'Closed') {
-            Trigger.newMap.get( positionId ).End_Date__c = date.today();
+    Position__c oldP;
+    for (Position__c newP : Trigger.New) {
+        oldP = Trigger.oldMap.get(newP.Id);
+        if (oldP.Status__c != 'Closed' && newP.Status__c == 'Closed') {
+            newP.End_Date__c = date.today();
         }
     }
 }
