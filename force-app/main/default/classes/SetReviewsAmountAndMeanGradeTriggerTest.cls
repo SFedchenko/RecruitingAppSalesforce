@@ -19,10 +19,9 @@ private class SetReviewsAmountAndMeanGradeTriggerTest {
             jobAppsIds.add(testJobApp.Id);
         }
         
-        List<Review__c> testReviews = TestFactory.generateReviews(jobAppsIds, 90, 2);
-        
         Test.startTest();
         
+        List<Review__c> testReviews = TestFactory.generateReviews(jobAppsIds, 90, 2);
         List<Job_Application__c> jobAppsAfterInsert = [SELECT Id, Current_reviews_amount__c, Mean_review_grade__c FROM Job_Application__c];
         
         Test.stopTest();
@@ -58,10 +57,9 @@ private class SetReviewsAmountAndMeanGradeTriggerTest {
         testReviews[2].Grade__c = 100;
         testReviews[3].Grade__c = 100;
         
-        update testReviews;
-        
         Test.startTest();
         
+        update testReviews;
         List<Job_Application__c> jobAppsAfterUpdate = [SELECT Id, Current_reviews_amount__c, Mean_review_grade__c FROM Job_Application__c];
         
         Test.stopTest();
@@ -94,10 +92,9 @@ private class SetReviewsAmountAndMeanGradeTriggerTest {
         
         testReviews[1].Job_Application__c = testReviews[2].Job_Application__c;
         
-        update testReviews;
-        
         Test.startTest();
         
+        update testReviews;
         List<Job_Application__c> jobAppsAfterUpdate = [SELECT Id, Current_reviews_amount__c, Mean_review_grade__c FROM Job_Application__c];
         
         Test.stopTest();

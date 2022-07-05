@@ -11,10 +11,10 @@ private class SetPositionEndDateTriggerTest {
             Id testPositionId = testPosition.Id;
             testPositionsIds.add(testPositionId);
         }
-        update testPositionsWithStatusOpen;
         
         Test.startTest();
         
+        update testPositionsWithStatusOpen;
         List<Position__c> positionsAfterUpdate = [SELECT Id, End_Date__c FROM Position__c WHERE Id IN :testPositionsIds];
         
         Test.stopTest();

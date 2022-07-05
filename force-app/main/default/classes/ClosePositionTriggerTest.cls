@@ -14,10 +14,10 @@ private class ClosePositionTriggerTest {
         }
         List<Job_Application__c> testJobApps = TestFactory.generateJobApplications(positionId, candidatesIds);
         testJobApps[0].JAStatus__c = 'Hired';
-        update testJobApps;
-        
+
         Test.startTest();
-        
+
+        update testJobApps;
         List<Position__c> positionsAfterUpdate = [SELECT Id, Status__c FROM Position__c];
         
         Test.stopTest();
