@@ -1,4 +1,9 @@
 public class PositionSelector {
+    
+    public static List<Position__c> selectByStatusAndStartDate(String Status) {
+        String q = 'SELECT Id, Status__c FROM Position__c WHERE Status__c =: Status AND Start_Date__c < LAST_N_DAYS:89';
+        return Database.query(q);
+    }
 
     public static List<Position__c> selectByIds(Set<Id> Ids) {
         String q = 'SELECT Id, Status__c FROM Position__c WHERE Id IN :Ids';
