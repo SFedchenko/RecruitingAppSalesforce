@@ -1,23 +1,5 @@
 @isTest
 private class PositionSelectorTest {
-    
-    @isTest
-    static void testSelectByStatusAndStartDate() {
-        
-        List<Position__c> testPositions = TestFactory.generatePositions('Open', 2);
-        for (Position__c p : testPositions) {
-            p.Start_Date__c = Date.today().addDays(-90);
-        }
-        update testPositions;
-        
-        Test.startTest();
-        
-        List<Position__c> methodPositions = PositionSelector.selectByStatusAndStartDate('Open');
-        
-        Test.stopTest();
-        
-        System.assertEquals (testPositions.size(), methodPositions.size());
-    }
 
     @isTest
     static void testSelectByIds() {
