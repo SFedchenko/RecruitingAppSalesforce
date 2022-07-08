@@ -4,7 +4,7 @@ trigger ClosePosition on Job_Application__c (after update) {
 
     for (Job_Application__c newJobApp : Trigger.New) {
         oldJobApp = Trigger.oldMap.get(newJobApp.Id);
-        if (newJobApp.JAStatus__c == 'Hired' && oldJobApp.JAStatus__c != 'Hired') {
+        if (oldJobApp.JAStatus__c != 'Hired' && newJobApp.JAStatus__c == 'Hired') {
             positionsIds.add(newJobApp.Position__c);
         }
     }
