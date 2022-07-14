@@ -1,5 +1,18 @@
 public class JobApplicationService {
 
+    public static List<Job_Application__c> jobAppsWithFieldsAndObjectAccess(List<Job_Application__c> jobAppsWithNotAppliedPermissions) {
+        return Security.stripInaccessible(AccessType.READABLE, jobAppsWithNotAppliedPermissions, true).getRecords();
+    }
+    
+    public static Set<Id> candidatesIds(Id recordId) {
+        Set<Id> relatedCandidatesIds = new Set<Id>();
+        List<Job_Application__c> relatedJobApps = JobApplicationSelector.selectByPositionId(recordId);
+        for (Job_Application__c ja : relatedJobApps) {
+            relatedCandidatesIds.add(ja.Candidate__c);
+        }
+        return relatedCandidatesIds;
+    }
+
     public static List<Job_Application__c> jobAppsToUpdate(Set<Id> jaIds) {
         List<Job_Application__c> jobAppsToUpdate = JobApplicationSelector.selectByIds(jaIds);
     	List<AggregateResult> aggregateResults = ReviewSelector.selectByJobAppsIds(jaIds);

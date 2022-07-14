@@ -1,0 +1,69 @@
+<template>
+    <lightning-card>
+        <slot name="title" class="candidates-tiles-card-title">
+            <div>Related candidates</div>
+        </slot>
+        <div class="slds-grid slds-wrap slds-gutters_xx-small slds-p-horizontal_x-small">
+            <template if:true={selectedCandidates}>
+                <template for:each={selectedCandidates} for:item="candidate">
+                    <div key={candidate.Id} title="Click tile to see more info" class="slds-col slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_6-of-12 slds-p-vertical_xx-small">
+                        <lightning-card data-candidate-id={candidate.Id} onclick={openModal} class="candidate-tile">
+                            <div class="slds-truncate slds-p-around_xx-small">
+                                <div title="Click to open record detail page" class="slds-text-align_center slds-text-heading_small">
+                                    <a onclick={navigateToCandidateRecord} data-candidate-id={candidate.Id} tabindex="-1">{candidate.Name}</a>
+                                </div>
+                                <template if:true={candidateTileFieldSetData}>
+                                    <lightning-record-form object-api-name={candidateObjectName}
+                                                           record-id={candidate.Id}
+                                                           fields={candidateTileFieldSetData}
+                                                           mode="readonly"
+                                    >
+                                    </lightning-record-form>
+                                </template>
+                            </div>
+                        </lightning-card>
+                    </div>
+                </template>
+            </template>
+        </div>
+        <div slot="footer">
+            <c-pagination page-number={pageNumber} pages-amount-parent={pagesAmountParent} onpaginate={paginateRecordsHandler}></c-pagination>
+        </div>
+    </lightning-card>
+    <template if:true={isModalOpen}>
+        <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                    <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">{candidateName}</h1>
+                </div>
+
+                <div class="slds-modal__content slds-p-around_medium">
+                    <lightning-record-form object-api-name={candidateObjectName}
+                                           record-id={candidateId}
+                                           fields={candidateModalFieldSetData}
+                                           mode="readonly"
+                    >
+                    </lightning-record-form>
+
+                    <div class="modal-table-title">Related job applications</div>
+
+                    <div class="slds-table_col-bordered slds-table_bordered">
+                        <lightning-datatable data={selectedJobApps}
+                                             columns={modalTableColumnsFinal}
+                                             key-field="Id"
+                                             hide-checkbox-column="true"
+                        >
+                        </lightning-datatable>
+                    </div>
+
+                    <c-pagination page-number={modalTablePageNumber} pages-amount-parent={modalTablePagesAmount} onpaginate={paginateModalTableRecordsHandler}></c-pagination>
+                </div>
+
+                <div class="slds-modal__footer">
+                    <button onclick={closeModal} class="slds-button slds-button_brand">Close</button>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+</template>
