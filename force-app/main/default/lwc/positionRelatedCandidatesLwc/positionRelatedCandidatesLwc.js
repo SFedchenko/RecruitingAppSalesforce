@@ -1,19 +1,15 @@
-import { LightningElement, wire, api } from 'lwc';
+import { LightningElement, api } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { NavigationMixin } from 'lightning/navigation';
+import Id from '@salesforce/user/Id';
 import getCandidatesWrapper from '@salesforce/apex/PositionRelatedCandidatesLwcController.getCandidatesWrapper';
 import getJobAppsWrapper from '@salesforce/apex/PositionRelatedCandidatesLwcController.getJobAppsWrapper';
 import CANDIDATE__C_OBJECT from '@salesforce/schema/Candidate__c';
 
 export default class PositionRelatedCandidatesLwc extends NavigationMixin(LightningElement) {
-    /*
-    modalTableColumns = [
-        { label: 'Name', fieldName: 'Name' },
-        { label: 'Status', fieldName: 'JAStatus__c' }
-    ];
-    */
     
     @api recordId; //variable to store current page record Id
+    userId = Id; //variable to store current user Id
     candidateObjectName = CANDIDATE__C_OBJECT;
     @api recordsPerPageParent = 4; //number variable to store amount of records displayed per page
     @api pagesAmountParent; //number variable to store amount of pages
@@ -43,7 +39,7 @@ export default class PositionRelatedCandidatesLwc extends NavigationMixin(Lightn
     connectedCallback() {
         this.pageNumber = 1;
         this.getStartingOffsetParam();
-        this.loadCandidatesWrapper(this.recordId, this.recordsPerPageParent, this.componentOffsetParam);
+        this.loadCandidatesWrapper(this.userId, this.recordId, this.recordsPerPageParent, this.componentOffsetParam);
 	}
 
     //Function for showing page message
@@ -67,8 +63,9 @@ export default class PositionRelatedCandidatesLwc extends NavigationMixin(Lightn
     - hiding spinner;
     - showing error message if there was an error during loading data from org.
     */
-    loadCandidatesWrapper(componentId, recordsPerPage, componentOffsetParam){
+    loadCandidatesWrapper(userId, componentId, recordsPerPage, componentOffsetParam){
         getCandidatesWrapper ({
+            userId: userId,
             positionId: componentId,
             limitParamWrapper: recordsPerPage,
             offsetParamWrapper: componentOffsetParam
@@ -112,7 +109,7 @@ export default class PositionRelatedCandidatesLwc extends NavigationMixin(Lightn
     paginateRecordsHandler(event){
         this.pageNumber = event.detail.currentPageNumber;
         this.getStartingOffsetParam();
-        this.loadCandidatesWrapper(this.recordId, this.recordsPerPageParent, this.componentOffsetParam);
+        this.loadCandidatesWrapper(this.userId, this.recordId, this.recordsPerPageParent, this.componentOffsetParam);
     }
 
     openModal(event) {

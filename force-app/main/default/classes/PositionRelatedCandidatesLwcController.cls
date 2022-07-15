@@ -12,8 +12,9 @@ public class PositionRelatedCandidatesLwcController {
     }
     
     @AuraEnabled(cacheable=true)
-    public static CandidatesWrapper getCandidatesWrapper(Id positionId, Integer limitParamWrapper, Integer offsetParamWrapper){
-
+    public static CandidatesWrapper getCandidatesWrapper(Id userId, Id positionId, Integer limitParamWrapper, Integer offsetParamWrapper){
+        String candidateTileFieldSet;
+        String candidateModalFieldSet;
         CandidatesWrapper componentCandidatesWrapper = new CandidatesWrapper();
 
         Set<Id> componentCandidatesIds = JobApplicationService.candidatesIds(positionId);
@@ -23,9 +24,21 @@ public class PositionRelatedCandidatesLwcController {
             CandidateSelector.selectByIdsWithLimitAndOffset(componentCandidatesIds, limitParamWrapper, offsetParamWrapper)
         );
 
-        componentCandidatesWrapper.candidateTileFields = CandidateService.getFieldSetData('Candidate__c', 'CandidateTileFieldSet');
+        String userProfileName = UserService.getUserProfileName(userId);
+        Set<String> profileNamesForCheck = new Set<String>{'Recruiter', 'System Administrator'};
+        Set<String> userPermissionSetNames = UserService.getUserPermissionSetsNames(userId);
+        String permissionSetNameForCheck = 'Interviewer';
+        if (profileNamesForCheck.contains(userProfileName)) {
+            candidateTileFieldSet = Field_set__mdt.getInstance('Recruiter_field_set').Candidate_tile_field_set__c;
+            candidateModalFieldSet = Field_set__mdt.getInstance('Recruiter_field_set').Candidate_modal_field_set__c;
+        } else if (userPermissionSetNames.contains(permissionSetNameForCheck)) {
+            candidateTileFieldSet = Field_set__mdt.getInstance('Interviewer_field_set').Candidate_tile_field_set__c;
+            candidateModalFieldSet = Field_set__mdt.getInstance('Interviewer_field_set').Candidate_modal_field_set__c;
+        }
 
-        componentCandidatesWrapper.candidateModalFields = CandidateService.getFieldSetData('Candidate__c', 'CandidateModalFieldSet');
+        componentCandidatesWrapper.candidateTileFields = CandidateService.getFieldSetData('Candidate__c', candidateTileFieldSet);
+
+        componentCandidatesWrapper.candidateModalFields = CandidateService.getFieldSetData('Candidate__c', candidateModalFieldSet);
 
         return componentCandidatesWrapper;
     }
