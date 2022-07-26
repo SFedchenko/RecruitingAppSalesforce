@@ -4,22 +4,17 @@
             <div>Related candidates</div>
         </slot>
         <div class="slds-grid slds-wrap slds-gutters_xx-small slds-p-horizontal_x-small">
-            <template if:true={selectedCandidates}>
-                <template for:each={selectedCandidates} for:item="candidate">
+            <template if:true={tileRecords}>
+                <template for:each={tileRecords} for:item="candidate">
                     <div key={candidate.Id} title="Click tile to see more info" class="slds-col slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_6-of-12 slds-p-vertical_xx-small">
                         <lightning-card data-candidate-id={candidate.Id} onclick={openModal} class="candidate-tile">
                             <div class="slds-truncate slds-p-around_xx-small">
                                 <div title="Click to open record detail page" class="slds-text-align_center slds-text-heading_small">
                                     <a onclick={navigateToCandidateRecord} data-candidate-id={candidate.Id} tabindex="-1">{candidate.Name}</a>
                                 </div>
-                                <template if:true={candidateTileFieldSetData}>
-                                    <lightning-record-form object-api-name={candidateObjectName}
-                                                           record-id={candidate.Id}
-                                                           fields={candidateTileFieldSetData}
-                                                           mode="readonly"
-                                    >
-                                    </lightning-record-form>
-                                </template>
+                                
+                                <div data-tile-id={candidate.Id} class="slds-p-around_xx-small tile-fieldset-data-form" lwc:dom="manual"></div>
+
                             </div>
                         </lightning-card>
                     </div>
@@ -38,12 +33,7 @@
                 </div>
 
                 <div class="slds-modal__content slds-p-around_medium">
-                    <lightning-record-form object-api-name={candidateObjectName}
-                                           record-id={candidateId}
-                                           fields={candidateModalFieldSetData}
-                                           mode="readonly"
-                    >
-                    </lightning-record-form>
+                    <div data-modal-id={candidateId} class="slds-p-around_xx-small modal-fieldset-data-form" lwc:dom="manual"></div>
 
                     <div class="modal-table-title">Related job applications</div>
 

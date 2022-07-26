@@ -8,6 +8,37 @@ import CANDIDATE__C_OBJECT from '@salesforce/schema/Candidate__c';
 
 export default class PositionRelatedCandidatesLwc extends NavigationMixin(LightningElement) {
     
+    renderedCallback() {
+        const tileForms = this.template.querySelectorAll('.tile-fieldset-data-form');
+        for (const el of tileForms) {
+            const tileId = el.dataset.tileId;
+            const tileRecord = this.tileData.get(tileId);
+            let innerHtml = '';
+            for (const field of this.candidateTileFieldSetData) {
+                if (field.isAccessible) {
+                    innerHtml += `<div class="form-label">${field.fieldLabel}</div>` + `<div class="form-text">${tileRecord[field.fieldName] || ''}</div>` + '<br>';
+                } else {
+                    innerHtml += `<div class="inaccessible-fields"><div class="form-label">${field.fieldLabel}</div>` + `<div class="form-text">${tileRecord[field.fieldName] || ''}</div></div>` + '<br>';
+                }
+            }
+            el.innerHTML = innerHtml;
+        }
+        if (this.isModalOpen) {
+            const modalForm = this.template.querySelector('.modal-fieldset-data-form');
+            const modalId = modalForm.dataset.modalId;
+            const modalRecord = this.modalData.get(modalId);
+            let innerHtml = '';
+            for (const field of this.candidateModalFieldSetData) {
+                if (field.isAccessible) {
+                    innerHtml += `<div class="form-label">${field.fieldLabel}</div>` + `<div class="form-text">${modalRecord[field.fieldName] || ''}</div>` + '<br>';
+                } else {
+                    innerHtml += `<div class="inaccessible-fields"><div class="form-label">${field.fieldLabel}</div>` + `<div class="form-text">${modalRecord[field.fieldName] || ''}</div></div>` + '<br>';
+                }
+            }
+            modalForm.innerHTML = innerHtml;
+        }
+      }
+
     @api recordId; //variable to store current page record Id
     userId = Id; //variable to store current user Id
     candidateObjectName = CANDIDATE__C_OBJECT;
@@ -15,9 +46,13 @@ export default class PositionRelatedCandidatesLwc extends NavigationMixin(Lightn
     @api pagesAmountParent; //number variable to store amount of pages
     componentOffsetParam; //number variable to store offset parameter for the database query fo candidates records
     @api pageNumber; //number variable to store starting page number
-    selectedCandidates = []; //array to store candidates records received from the org and display in the component
+    tileRecords = []; //array to store candidates records received from the org and display in the component
+    tileData = new Map();
+    modalRecords = [];
+    modalData = new Map();
     candidateTileFieldSetData = []; //array to store candidate tile field set data
     candidateModalFieldSetData = []; //array to store candidate modal field set data
+
     isModalOpen = false; //boolean variable to open and close modal
     candidateName; //variable to store candidate name displayed in modal header
     candidateId; //variable to store candidate Id to pass in modal record form
@@ -71,16 +106,24 @@ export default class PositionRelatedCandidatesLwc extends NavigationMixin(Lightn
             offsetParamWrapper: componentOffsetParam
         })
             .then (data => {
-                this.selectedCandidates = data.candidatesRecords;
-                this.pagesAmountParent = Math.ceil(data.candidatesAmount / this.recordsPerPageParent);
-                this.candidateTileFieldSetData = data.candidateTileFields;
-                this.candidateModalFieldSetData = data.candidateModalFields;
-                if (this.selectedCandidates.length === 0){
-                    this.showMessage('There are no related candidates records for this position', '', 'warning');
+                this.tileRecords = data.candidateTileRecords;
+                if (this.tileRecords.length === 0){
+                    this.showMessage('There are no related candidate records for this position', '', 'warning');
+                } else {
+                    for (const tileRecord of this.tileRecords) {
+                        this.tileData.set(tileRecord.Id, tileRecord);
+                    }
+                    this.modalRecords = data.candidateModalRecords;
+                    for (const modalRecord of this.modalRecords) {
+                        this.modalData.set(modalRecord.Id, modalRecord);
+                    }
+                    this.pagesAmountParent = Math.ceil(data.candidatesAmount / this.recordsPerPageParent);
+                    this.candidateTileFieldSetData = data.candidateTileFieldsData;
+                    this.candidateModalFieldSetData = data.candidateModalFieldsData;
                 }
             })
             .catch (error => {
-				this.showMessage('There was an error loading related candidates records', '', 'error');
+				this.showMessage('There was an error loading related candidate records', '', 'error');
                 console.log(error);
 			}); 
     }
@@ -115,11 +158,12 @@ export default class PositionRelatedCandidatesLwc extends NavigationMixin(Lightn
     openModal(event) {
         this.isModalOpen = true;
         this.candidateId = event.target.dataset.candidateId;
-        for (const candidate of this.selectedCandidates) {
+        this.candidateName = this.modalData.get(this.candidateId).Name;
+        /*for (const candidate of this.modalRecords) {
             if (candidate.Id == this.candidateId) {
                 this.candidateName = candidate.Name;
             }
-        }
+        }*/
         this.modalTablePageNumber = 1;
         this.getStartingOffsetParamModalTable();
         this.loadJobAppsWrapper(this.candidateId, this.modalTableRecordsPerPage, this.modalTableOffsetParam);
@@ -157,7 +201,6 @@ export default class PositionRelatedCandidatesLwc extends NavigationMixin(Lightn
                 this.modalTableColumns = data.columns;
                 this.modalTableColumnsFinal = JSON.parse(JSON.stringify(this.modalTableColumns));
                 this.modalTableColumnsFinal.forEach(element => element.hideDefaultActions = true);
-                console.log(this.modalTableColumnsFinal);
                 if (this.selectedJobApps.length === 0){
                     this.showMessage('There are no related job applications records for this candidate', '', 'warning');
                 }

@@ -15,3 +15,13 @@
 	font-weight: bold;
 	text-align: center;
 }
+
+.inaccessible-fields {
+	background-color: #ecebea;
+}
+.form-label {
+	font-size: 90%;
+}
+.form-text {
+	font-size: 110%;
+}

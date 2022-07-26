@@ -8,12 +8,7 @@ public class UserService {
     }
 
     public static Set<String> getUserPermissionSetsNames(Id userId) {
-        List<PermissionSetAssignment> permissionSetAssignmentInfo = PermissionSetAssignmentSelector.selectByAssigneeId(userId);
-        Set<Id> permissionSetsIds = new Set<Id>();
-        for (PermissionSetAssignment p : permissionSetAssignmentInfo) {
-            permissionSetsIds.add(p.PermissionSetId);
-        }
-        List<PermissionSet> permissionSetInfo = PermissionSetSelector.selectByPermissionSetsIds(permissionSetsIds);
+        List<PermissionSet> permissionSetInfo = PermissionSetSelector.selectByAssigneeId(userId);
         Set<String> permissionSetsNames = new Set<String>();
         for (PermissionSet p : permissionSetInfo) {
             permissionSetsNames.add(p.Name);
