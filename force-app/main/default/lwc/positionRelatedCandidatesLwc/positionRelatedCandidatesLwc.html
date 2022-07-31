@@ -1,15 +1,15 @@
 <template>
     <lightning-card>
         <slot name="title" class="candidates-tiles-card-title">
-            <div>Related candidates</div>
+            <div>{labels.ComponentTitle}</div>
         </slot>
         <div class="slds-grid slds-wrap slds-gutters_xx-small slds-p-horizontal_x-small">
             <template if:true={tileRecords}>
                 <template for:each={tileRecords} for:item="candidate">
-                    <div key={candidate.Id} title="Click tile to see more info" class="slds-col slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_6-of-12 slds-p-vertical_xx-small">
+                    <div key={candidate.Id} title={labels.TextWhenHoverOverCandidateTile} class="slds-col slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_6-of-12 slds-p-vertical_xx-small">
                         <lightning-card data-candidate-id={candidate.Id} onclick={openModal} class="candidate-tile">
                             <div class="slds-truncate slds-p-around_xx-small">
-                                <div title="Click to open record detail page" class="slds-text-align_center slds-text-heading_small">
+                                <div title={labels.TextWhenHoverOverCandidateName} class="slds-text-align_center slds-text-heading_small">
                                     <a onclick={navigateToCandidateRecord} data-candidate-id={candidate.Id} tabindex="-1">{candidate.Name}</a>
                                 </div>
                                 
@@ -35,7 +35,7 @@
                 <div class="slds-modal__content slds-p-around_medium">
                     <div data-modal-id={candidateId} class="slds-p-around_xx-small modal-fieldset-data-form" lwc:dom="manual"></div>
 
-                    <div class="modal-table-title">Related job applications</div>
+                    <div class="modal-table-title">{labels.ComponentModalDatatableTitle}</div>
 
                     <div class="slds-table_col-bordered slds-table_bordered">
                         <lightning-datatable data={selectedJobApps}
@@ -50,7 +50,7 @@
                 </div>
 
                 <div class="slds-modal__footer">
-                    <button onclick={closeModal} class="slds-button slds-button_brand">Close</button>
+                    <button onclick={closeModal} class="slds-button slds-button_brand">{labels.ComponentModalCloseButtonTitle}</button>
                 </div>
             </div>
         </section>

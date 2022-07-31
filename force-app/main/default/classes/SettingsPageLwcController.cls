@@ -19,10 +19,6 @@ public class SettingsPageLwcController {
         return selectOptions;
     }
     
-    public static Map<String, Field_set__mdt> getFieldSetRecords() {
-        return Field_set__mdt.getAll();
-    }
-
     public class SettingsDataWrapper {
         @AuraEnabled
         public List<SelectOption> selectOptions {get; set;}
@@ -73,21 +69,7 @@ public class SettingsPageLwcController {
     @AuraEnabled(cacheable=true)
     public static List<String> updateCustomMetadataRecords(Map<String, Field_set__mdt> customMetadataRecords) {
         try {
-            Metadata.DeployContainer container = new Metadata.DeployContainer();
-            List<String> fieldSetFullNames = new List<String>();
-            for (String recordName : customMetadataRecords.keySet()) {
-                fieldSetFullNames.add('Field_set.' + recordName);
-            }
-            List<Metadata.Metadata> records = Metadata.Operations.retrieve(Metadata.MetadataType.CustomMetadata, fieldSetFullNames);
-            for (Metadata.Metadata record : records) {
-                Metadata.CustomMetadata fieldSetRecord = (Metadata.CustomMetadata) record;
-                String fieldSetRecordName = fieldSetRecord.fullName.substringAfter('.');
-                Field_set__mdt fieldSetToCopy = customMetadataRecords.get(fieldSetRecordName);
-                for (Metadata.CustomMetadataValue fieldSetRecordValue : fieldSetRecord.values) {
-                    fieldSetRecordValue.value = fieldSetToCopy.get(fieldSetRecordValue.field);
-                }
-                container.addMetadata(fieldSetRecord);
-            }
+            Metadata.DeployContainer container = CandidateService.constructDeploymentRequest(customMetadataRecords);
             Id asyncResultId = Metadata.Operations.enqueueDeployment(container, null);
             List<String> sendToJS  = new List<String>();
             sendToJS.add('Success');

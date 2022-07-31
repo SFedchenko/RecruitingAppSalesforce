@@ -10,6 +10,8 @@
             <objects>
                 <object>Position__c</object>
             </objects>
+            <property label="Candidate tiles amount displayed per component page" name="recordsPerPageParent" type="Integer" min="1" max="200" default="10" required="true"/>
+            <property label="Job application records amount displayed per page in modal datatable" name="modalTableRecordsPerPage" type="Integer" min="1" max="200" default="10" required="true"/>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>

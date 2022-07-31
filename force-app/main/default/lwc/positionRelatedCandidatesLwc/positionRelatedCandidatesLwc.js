@@ -4,10 +4,79 @@ import { NavigationMixin } from 'lightning/navigation';
 import Id from '@salesforce/user/Id';
 import getCandidatesWrapper from '@salesforce/apex/PositionRelatedCandidatesLwcController.getCandidatesWrapper';
 import getJobAppsWrapper from '@salesforce/apex/PositionRelatedCandidatesLwcController.getJobAppsWrapper';
-import CANDIDATE__C_OBJECT from '@salesforce/schema/Candidate__c';
+import ComponentTitle from '@salesforce/label/c.ComponentTitle';
+import ComponentModalDatatableTitle from '@salesforce/label/c.ComponentModalDatatableTitle';
+import ComponentModalCloseButtonTitle from '@salesforce/label/c.ComponentModalCloseButtonTitle';
+import TextWhenHoverOverCandidateName from '@salesforce/label/c.TextWhenHoverOverCandidateName';
+import TextWhenHoverOverCandidateTile from '@salesforce/label/c.TextWhenHoverOverCandidateTile';
+import LoadingCandidateRecordsError from '@salesforce/label/c.LoadingCandidateRecordsError';
+import NoRelatedCandidates from '@salesforce/label/c.NoRelatedCandidates';
+import NoRelatedJobApps from '@salesforce/label/c.NoRelatedJobApps';
+import LoadingJobAppsRecordsError from '@salesforce/label/c.LoadingJobAppsRecordsError';
 
 export default class PositionRelatedCandidatesLwc extends NavigationMixin(LightningElement) {
-    
+
+    @api recordId; //variable to store current page record Id
+    userId = Id; //variable to store current user Id
+    @api recordsPerPageParent; //number variable to store amount of records displayed per page
+    @api pagesAmountParent; //number variable to store amount of pages
+    componentOffsetParam; //number variable to store offset parameter for the database query of candidates records
+    @api pageNumber; //number variable to store starting page number
+    tileData = new Map(); //map to store data received from the org and needed for display in the component tiles
+    modalData = new Map(); //map to store data received from the org and needed for display in the component modals
+    tileRecords = []; //array to store candidates records received from the org and display in the component tiles
+    modalRecords = []; //array to store candidates records received from the org and display in the component modals
+    candidateTileFieldSetData = []; //array to store candidate tile field set fields data
+    candidateModalFieldSetData = []; //array to store candidate modal field set fields data
+    isModalOpen = false; //boolean variable to open and close modal
+    candidateName; //variable to store candidate name displayed in modal header
+    candidateId; //variable to store candidate Id to pass in modal record form
+    @api modalTableRecordsPerPage; //number variable to store amount of records displayed per page in modal table
+    @api modalTablePageNumber; //number variable to store starting page number for modal table
+    @api modalTablePagesAmount; //number variable to store amount of pages for modal table
+    selectedJobApps = []; //array to store job application records received from the org and display in the modal table
+    modalTableColumns = []; //array to store objects of data for columns to display in the modal table
+    modalTableColumnsFinal = []; //array to store modified objects of data for columns to display in the modal table
+    modalTableOffsetParam; //number variable to store offset parameter for the database query of job application records
+
+    labels = {
+        ComponentTitle,
+        ComponentModalDatatableTitle,
+        ComponentModalCloseButtonTitle,
+        TextWhenHoverOverCandidateName,
+        TextWhenHoverOverCandidateTile,
+    }
+
+    messages = {
+        LoadingCandidateRecordsError,
+        NoRelatedCandidates,
+        NoRelatedJobApps,
+        LoadingJobAppsRecordsError,
+    }
+
+    //Calculating starting offset parameter from starting page number
+    getStartingOffsetParam(){
+        this.componentOffsetParam = (this.pageNumber - 1) * this.recordsPerPageParent;
+    }
+
+    //Function for showing page message
+    showMessage(customTitle = '', customMessage = '', customVariant = 'info'){
+        const evt = new ShowToastEvent({
+            title: customTitle,
+            message: customMessage,
+            variant: customVariant,
+        });
+        this.dispatchEvent(evt);
+    }
+
+    //Loading 1st page with related candidates
+    connectedCallback() {
+        this.pageNumber = 1;
+        this.getStartingOffsetParam();
+        this.loadCandidatesWrapper(this.userId, this.recordId, this.recordsPerPageParent, this.componentOffsetParam);
+	}
+
+    //Building appropriate record forms for candidate tiles and modal
     renderedCallback() {
         const tileForms = this.template.querySelectorAll('.tile-fieldset-data-form');
         for (const el of tileForms) {
@@ -39,65 +108,7 @@ export default class PositionRelatedCandidatesLwc extends NavigationMixin(Lightn
         }
       }
 
-    @api recordId; //variable to store current page record Id
-    userId = Id; //variable to store current user Id
-    candidateObjectName = CANDIDATE__C_OBJECT;
-    @api recordsPerPageParent = 4; //number variable to store amount of records displayed per page
-    @api pagesAmountParent; //number variable to store amount of pages
-    componentOffsetParam; //number variable to store offset parameter for the database query fo candidates records
-    @api pageNumber; //number variable to store starting page number
-    tileRecords = []; //array to store candidates records received from the org and display in the component
-    tileData = new Map();
-    modalRecords = [];
-    modalData = new Map();
-    candidateTileFieldSetData = []; //array to store candidate tile field set data
-    candidateModalFieldSetData = []; //array to store candidate modal field set data
-
-    isModalOpen = false; //boolean variable to open and close modal
-    candidateName; //variable to store candidate name displayed in modal header
-    candidateId; //variable to store candidate Id to pass in modal record form
-
-    @api modalTableRecordsPerPage = 2; //number variable to store amount of records displayed per page in modal table
-    @api modalTablePageNumber; //number variable to store starting page number for modal table
-    @api modalTablePagesAmount; //number variable to store amount of pages for modal table
-    selectedJobApps = []; //array to store job applications records received from the org and display in the modal table
-    modalTableColumns = []; //array to store objects of data for columns to display in the modal table
-    modalTableColumnsFinal = [];
-    modalTableOffsetParam; //number variable to store offset parameter for the database query of job applications records
-
-    //Calculating starting offset parameter from starting page number
-    getStartingOffsetParam(){
-        this.componentOffsetParam = (this.pageNumber - 1) * this.recordsPerPageParent;
-    }
-
-    //Loading 1st page with related candidates
-    connectedCallback() {
-        this.pageNumber = 1;
-        this.getStartingOffsetParam();
-        this.loadCandidatesWrapper(this.userId, this.recordId, this.recordsPerPageParent, this.componentOffsetParam);
-	}
-
-    //Function for showing page message
-    showMessage(customTitle = '', customMessage = '', customVariant = 'info'){
-        const evt = new ShowToastEvent({
-            title: customTitle,
-            message: customMessage,
-            variant: customVariant,
-        });
-        this.dispatchEvent(evt);
-    }
-
-    /*
-    Function for:
-    - showing spinner;
-    - disabling "Save" button;
-    - receiving positions records and positions records amount from org;
-    - calculating appropriate amount of pages;
-    - cloning positions records array;
-    - hiding table and showing warning message if there are no positions records for selected status picklist filter option;
-    - hiding spinner;
-    - showing error message if there was an error during loading data from org.
-    */
+    //Loading data from org, calculating appropriate variables values and showing appropriate message, if there are no related candidate records or there was an error loading data
     loadCandidatesWrapper(userId, componentId, recordsPerPage, componentOffsetParam){
         getCandidatesWrapper ({
             userId: userId,
@@ -108,7 +119,7 @@ export default class PositionRelatedCandidatesLwc extends NavigationMixin(Lightn
             .then (data => {
                 this.tileRecords = data.candidateTileRecords;
                 if (this.tileRecords.length === 0){
-                    this.showMessage('There are no related candidate records for this position', '', 'warning');
+                    this.showMessage(this.messages.NoRelatedCandidates, '', 'warning');
                 } else {
                     for (const tileRecord of this.tileRecords) {
                         this.tileData.set(tileRecord.Id, tileRecord);
@@ -123,7 +134,7 @@ export default class PositionRelatedCandidatesLwc extends NavigationMixin(Lightn
                 }
             })
             .catch (error => {
-				this.showMessage('There was an error loading related candidate records', '', 'error');
+				this.showMessage(this.messages.LoadingCandidateRecordsError, '', 'error');
                 console.log(error);
 			}); 
     }
@@ -143,52 +154,34 @@ export default class PositionRelatedCandidatesLwc extends NavigationMixin(Lightn
         })
     }
 
-    /*
-    Function for working with child pagination component that is:
-    - getting current page number from event detail;
-    - calculating appropriate offset parameter componentOffsetParam;
-    - loading appropriate candidates records from database.
-    */
+    //Working with child pagination component for candidate tiles
     paginateRecordsHandler(event){
         this.pageNumber = event.detail.currentPageNumber;
         this.getStartingOffsetParam();
         this.loadCandidatesWrapper(this.userId, this.recordId, this.recordsPerPageParent, this.componentOffsetParam);
     }
 
+    //opening modal and building appropriate record form
     openModal(event) {
         this.isModalOpen = true;
         this.candidateId = event.target.dataset.candidateId;
         this.candidateName = this.modalData.get(this.candidateId).Name;
-        /*for (const candidate of this.modalRecords) {
-            if (candidate.Id == this.candidateId) {
-                this.candidateName = candidate.Name;
-            }
-        }*/
         this.modalTablePageNumber = 1;
         this.getStartingOffsetParamModalTable();
         this.loadJobAppsWrapper(this.candidateId, this.modalTableRecordsPerPage, this.modalTableOffsetParam);
     }
 
+    //closing modal
     closeModal() {
         this.isModalOpen = false;
     }
 
-    //Calculating starting offset parameter from starting page number of modal table
+    //Calculating starting offset parameter from starting page number of modal datatable
     getStartingOffsetParamModalTable(){
         this.modalTableOffsetParam = (this.modalTablePageNumber - 1) * this.modalTableRecordsPerPage;
     }
 
-    /*
-    Function for:
-    - showing spinner;
-    - disabling "Save" button;
-    - receiving positions records and positions records amount from org;
-    - calculating appropriate amount of pages;
-    - cloning positions records array;
-    - hiding table and showing warning message if there are no positions records for selected status picklist filter option;
-    - hiding spinner;
-    - showing error message if there was an error during loading data from org.
-    */
+    //Loading data from org, calculating appropriate variables values and showing appropriate message, if there are no related candidate records or there was an error loading data
     loadJobAppsWrapper(candidateId, modalTableRecordsPerPage, modalTableOffsetParam){
         getJobAppsWrapper ({
             candidateId: candidateId,
@@ -202,15 +195,16 @@ export default class PositionRelatedCandidatesLwc extends NavigationMixin(Lightn
                 this.modalTableColumnsFinal = JSON.parse(JSON.stringify(this.modalTableColumns));
                 this.modalTableColumnsFinal.forEach(element => element.hideDefaultActions = true);
                 if (this.selectedJobApps.length === 0){
-                    this.showMessage('There are no related job applications records for this candidate', '', 'warning');
+                    this.showMessage(this.messages.NoRelatedJobApps, '', 'warning');
                 }
             })
             .catch (error => {
-				this.showMessage('There was an error loading related job applications records', '', 'error');
+				this.showMessage(this.messages.LoadingJobAppsRecordsError, '', 'error');
                 console.log(error);
 			}); 
     }
 
+    //Working with child pagination component for modal datatable
     paginateModalTableRecordsHandler(event) {
         this.modalTablePageNumber = event.detail.currentPageNumber;
         this.getStartingOffsetParamModalTable();

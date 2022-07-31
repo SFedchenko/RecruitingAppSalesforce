@@ -4,10 +4,10 @@
             <div class="slds-grid slds-wrap slds-gutters_small">
                 <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_6-of-12">
                     <div class="slds-grid slds-wrap slds-gutters_xx-small">
-                        <div class="slds-col slds-size_1-of-1 slds-p-horizontal_x-small slds-p-bottom_x-small header">Position related candidates component settings for recruiter</div>
+                        <div class="slds-col slds-size_1-of-1 slds-p-horizontal_x-small slds-p-bottom_x-small header">{labels.RecruiterSectionLabel}</div>
 
                         <div class="slds-col slds-size_6-of-12 slds-p-bottom_small">
-                            <lightning-combobox label="Candidate tile fieldset"
+                            <lightning-combobox label={labels.CandidateTileFieldSet}
                                                 value={currentRecruiterTileFieldset}
                                                 options={selectOptions}
                                                 onchange={recruiterTileFieldSetChangeHandler}
@@ -16,7 +16,7 @@
                         </div>
 
                         <div class="slds-col slds-size_6-of-12 slds-p-bottom_small">
-                            <lightning-combobox label="Candidate modal fieldset"
+                            <lightning-combobox label={labels.CandidateModalFieldSet}
                                                 value={currentRecruiterModalFieldset}
                                                 options={selectOptions}
                                                 onchange={recruiterModalFieldSetChangeHandler}
@@ -25,7 +25,7 @@
                         </div>
 
                         <div class="slds-col slds-size_1-of-1 slds-p-bottom_small">
-                            <lightning-input type="checkbox" label="Show inaccessible fields" checked={currentRecruiterCheckboxValue} onchange={recruiterCheckboxChangeHandler}></lightning-input>
+                            <lightning-input type="checkbox" label={labels.ShowInaccessibleFields} checked={currentRecruiterCheckboxValue} onchange={recruiterCheckboxChangeHandler}></lightning-input>
                         </div>
 
                         <div class="slds-col slds-size_6-of-12 slds-p-bottom_small">
@@ -66,10 +66,10 @@
                 
                 <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_6-of-12">
                     <div class="slds-grid slds-wrap slds-gutters_xx-small">
-                        <div class="slds-col slds-size_1-of-1 slds-p-horizontal_x-small slds-p-bottom_x-small header">Position related candidates component settings for interviewer</div>
+                        <div class="slds-col slds-size_1-of-1 slds-p-horizontal_x-small slds-p-bottom_x-small header">{labels.InterviewerSectionLabel}</div>
 
                         <div class="slds-col slds-size_6-of-12 slds-p-bottom_small">
-                            <lightning-combobox label="Candidate tile fieldset"
+                            <lightning-combobox label={labels.CandidateTileFieldSet}
                                                 value={currentInterviewerTileFieldset}
                                                 options={selectOptions}
                                                 onchange={interviewerTileFieldSetChangeHandler}
@@ -78,7 +78,7 @@
                         </div>
 
                         <div class="slds-col slds-size_6-of-12 slds-p-bottom_small">
-                            <lightning-combobox label="Candidate modal fieldset"
+                            <lightning-combobox label={labels.CandidateModalFieldSet}
                                                 value={currentInterviewerModalFieldset}
                                                 options={selectOptions}
                                                 onchange={interviewerModalFieldSetChangeHandler}
@@ -87,7 +87,7 @@
                         </div>
 
                         <div class="slds-col slds-size_1-of-1 slds-p-bottom_small">
-                            <lightning-input type="checkbox" label="Show inaccessible fields" checked={currentInterviewerCheckboxValue} onchange={interviewerCheckboxChangeHandler}></lightning-input>
+                            <lightning-input type="checkbox" label={labels.ShowInaccessibleFields} checked={currentInterviewerCheckboxValue} onchange={interviewerCheckboxChangeHandler}></lightning-input>
                         </div>
 
                         <div class="slds-col slds-size_6-of-12 slds-p-bottom_small">
@@ -128,7 +128,7 @@
 
                 <div class="slds-col slds-size_1-of-1 slds-align_absolute-center">
                     <lightning-button variant="brand"
-                                      label="Save"
+                                      label={labels.SaveButtonLabel}
                                       onclick={updateRecords}
                                       disabled={saveButtonIsDisabled}
                     >
