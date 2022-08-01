@@ -1,0 +1,27 @@
+.candidate-tile {
+	display: block;
+	border: 1.5px solid #ecebea;
+	border-radius: .25rem;
+}
+
+.candidates-tiles-card-title {
+	font-size: large;
+	font-weight: bold;
+	text-align: center;
+}
+
+.modal-table-title {
+	font-size: medium;
+	font-weight: bold;
+	text-align: center;
+}
+
+.inaccessible-fields {
+	background-color: #ecebea;
+}
+.form-label {
+	font-size: 90%;
+}
+.form-text {
+	font-size: 110%;
+}
